@@ -9,6 +9,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -29,10 +31,15 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_foku);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarNewFokus);
+        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.mapLocation);
         mapFragment.getMapAsync(this);
+
+
 
        // Button imButton = (Button) findViewById(R.id.btn_send);
         imageView = (ImageView) findViewById(R.id.imageCamera);
@@ -50,6 +57,12 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
 
             }
         });*/
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_fokus, menu);
+        return true;
     }
 
     /*@Override
