@@ -1,13 +1,29 @@
 package com.example.carlos.fokus;
 
-import android.content.Context;
+
+import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.hardware.Camera;
+import android.graphics.Bitmap;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.FrameLayout;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 
-public class NewFoku extends AppCompatActivity {
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
+    private GoogleMap mMap;
+    ImageView imageView;
+    final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -15,36 +31,42 @@ public class NewFoku extends AppCompatActivity {
         setContentView(R.layout.activity_new_foku);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        // Create an instance of Camera
-        //mCamera = getCameraInstance();
+        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.mapLocation);
+        mapFragment.getMapAsync(this);
 
-        // Create our Preview view and set it as the content of our activity.
-       // mPreview = new CameraPreview(this, mCamera);
-      //  FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
-       // preview.addView(mPreview);
+       // Button imButton = (Button) findViewById(R.id.btn_send);
+        imageView = (ImageView) findViewById(R.id.imageCamera);
+
+        /*if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            imButton.setEnabled(false);
+            ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE }, 0);
+        }*/
+
+        /*imButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(intent,CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+
+            }
+        });*/
     }
 
-    /** Check if this device has a camera */
-    private boolean checkCameraHardware(Context context) {
-        if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)){
-            // this device has a camera
-            return true;
-        } else {
-            // no camera on this device
-            return false;
-        }
-    }
+    /*@Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Bitmap bit =  (Bitmap) data.getExtras().get("data");
+        imageView.setImageBitmap(bit);
+    }*/
 
-    /** A safe way to get an instance of the Camera object. */
-    public static Camera getCameraInstance(){
-        Camera c = null;
-        try {
-            c = Camera.open(); // attempt to get a Camera instance
-        }
-        catch (Exception e){
-            // Camera is not available (in use or does not exist)
-        }
-        return c; // returns null if camera is unavailable
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+
+        LatLng currentLocation = new LatLng(14.9364475, -23.5067295);
+
+        mMap.addMarker(new MarkerOptions().position(currentLocation));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 13));
     }
 }
 
