@@ -53,6 +53,7 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private CameraPosition mCameraPosition;
+    private Marker marker;
 
     private ImageView imageView;
     final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1;
@@ -109,12 +110,14 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
         mapFragment.getMapAsync(this);
 
 
-        imageView = (ImageView) findViewById(R.id.imageCamera);
+
+        /*imageView = (ImageView) findViewById(R.id.imageCamera);
 
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             //imButton.setEnabled(false);
             ActivityCompat.requestPermissions(this, new String[] { android.Manifest.permission.CAMERA, android.Manifest.permission.WRITE_EXTERNAL_STORAGE }, 0);
-        }
+        }*/
+
     }
 
     /**
@@ -148,6 +151,35 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
         return true;
     }
 
+    public void setEventsMap(){
+        //EVENTS
+        // mMap.setOnCameraMoveListener(new GoogleMap.OnCameraChangeListener());
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                Log.d("setOnMapClickListener","latLng");
+                if (marker != null){
+                    marker.remove();
+                }
+                costumerMarker(new LatLng(latLng.latitude,latLng.longitude),"New Fokus","New Fokus");
+            }
+        });
+
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                Log.d("String","Marker"+marker.getTitle());
+                return false;
+            }
+        });
+
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                Log.d("String","Marker"+marker.getTitle());
+            }
+        });
+    }
     private void getDeviceLocation() {
     /*
      * Get the best and most recent location of the device, which may be null in rare
@@ -165,13 +197,13 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
 
                             LatLng mLatLon = new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
 
-                            mMap.addMarker(new MarkerOptions().position(mLatLon)
+                            marker = mMap.addMarker(new MarkerOptions().position(mLatLon)
                                                                .draggable(true));
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mLatLon, DEFAULT_ZOOM));
                         } else {
                             Log.d(TAG, "Current location is null. Using defaults.");
                             Log.e(TAG, "Exception: %s", task.getException());
-                            mMap.addMarker(new MarkerOptions().position(mDefaultLocation));
+                            marker = mMap.addMarker(new MarkerOptions().position(mDefaultLocation));
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
                             mMap.getUiSettings().setMyLocationButtonEnabled(false);
                         }
@@ -260,6 +292,8 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
 
         // Get the current location of the device and set the position of the map.
         getDeviceLocation();
+
+        setEventsMap();
     }
 
     private void updateLocationUI() {
@@ -279,6 +313,13 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
         } catch (SecurityException e)  {
             Log.e("Exception: %s", e.getMessage());
         }
+    }
+
+    public void costumerMarker(LatLng latLng, String title, String snippet){
+        marker = mMap.addMarker(new MarkerOptions().position(latLng)
+                .title(title)
+                .snippet(snippet)
+                .draggable(true));
     }
 
     /*private void showCurrentPlace() {
@@ -412,7 +453,7 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
         super.onActivityResult(requestCode, resultCode, data);
 
         Bitmap bit = (Bitmap)data.getExtras().get("data");
-        imageView.setImageBitmap(bit);
+        //imageView.setImageBitmap(bit);
     }
 
     /*private static File getOutputMediaFile(){

@@ -15,7 +15,7 @@
         android:background="?attr/colorPrimary"
         android:theme="@style/ToolbarTheme"/>
 
-    <LinearLayout
+    <!--<LinearLayout
         android:id="@+id/linearLayout1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -46,13 +46,13 @@
             android:lines="2" />
 
 
-    </LinearLayout>
+    </LinearLayout>-->
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:layout_below="@+id/linearLayout1">
+        android:layout_below="@+id/toolbarNewFokus">
 
         <fragment
             android:id="@+id/mapLocation"
