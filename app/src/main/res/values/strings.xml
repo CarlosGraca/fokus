@@ -4,12 +4,19 @@
     <string name="title_activity_maps">Map</string>
     <string name="description">Descrição</string>
     <string name="send">Enviar</string>
+
+    <string name="btn_api_test">Test Api</string>
+
     <string name="default_info_title">Default Location</string>
     <string name="default_info_snippet">No places found, because location permission is disabled.</string>
     <string name="option_get_place">Get place</string>
     <string name="pick_place">Choose a place</string>
+<<<<<<< HEAD
     <string name="title_activity_main1">MainActivity1</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+=======
+    <string name="my_points">Lista de pontos</string>
+>>>>>>> a7c4bd7617ca22876fe8a04c4bbf3ca8b2cc0351
 </resources>
