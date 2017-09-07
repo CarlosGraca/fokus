@@ -1,6 +1,8 @@
 package com.example.carlos.fokus;
 
 
+import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -20,6 +22,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -82,6 +85,8 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
 
     private Uri file;
 
+    final Context context = this;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,6 +123,8 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
             ActivityCompat.requestPermissions(this, new String[] { android.Manifest.permission.CAMERA, android.Manifest.permission.WRITE_EXTERNAL_STORAGE }, 0);
         }*/
 
+
+
     }
 
     /**
@@ -151,8 +158,9 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
         return true;
     }
 
+    //EVENTS
     public void setEventsMap(){
-        //EVENTS
+
         // mMap.setOnCameraMoveListener(new GoogleMap.OnCameraChangeListener());
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
@@ -168,7 +176,7 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                Log.d("String","Marker"+marker.getTitle());
+                showDialogFokus(marker);
                 return false;
             }
         });
@@ -180,6 +188,54 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
             }
         });
     }
+
+    public void showDialogFokus(Marker marker){
+        final Dialog dialog = new Dialog(context);
+        dialog.setContentView(R.layout.custom_info_contents);
+        dialog.setTitle(marker.getTitle());
+
+        // set the custom dialog components - text, image and button
+        TextView text = (TextView) dialog.findViewById(R.id.title);
+        text.setText((int) marker.getPosition().latitude);
+        TextView text1 = (TextView) dialog.findViewById(R.id.snippet);
+        text1.setText((int) marker.getPosition().longitude);
+
+        /*Button dialogButton = (Button) dialog.findViewById(R.id.dialogButtonOK);
+        // if button is clicked, close the custom dialog
+        dialogButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });*/
+
+        dialog.show();
+    }
+
+    public void infoWindow(){
+        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+            @Override
+            public View getInfoWindow(Marker marker) {
+                return null;
+            }
+
+            @Override
+            public View getInfoContents(Marker marker) {
+                // Inflate the layouts for the info window, title and snippet.
+                View infoWindow = getLayoutInflater().inflate(R.layout.custom_info_contents,
+                        (FrameLayout) findViewById(R.id.mapLocation), false);
+
+                TextView title = ((TextView) infoWindow.findViewById(R.id.title));
+                title.setText(marker.getTitle());
+
+                TextView snippet = ((TextView) infoWindow.findViewById(R.id.snippet));
+                snippet.setText(marker.getSnippet());
+
+                return infoWindow;
+            }
+        });
+    }
+
     private void getDeviceLocation() {
     /*
      * Get the best and most recent location of the device, which may be null in rare
@@ -256,31 +312,7 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
     public void onMapReady(GoogleMap map) {
         mMap = map;
 
-        // Use a custom info window adapter to handle multiple lines of text in the
-        // info window contents.
-        /*mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-
-            @Override
-            // Return null here, so that getInfoContents() is called next.
-            public View getInfoWindow(Marker arg0) {
-                return null;
-            }
-
-            @Override
-            public View getInfoContents(Marker marker) {
-                // Inflate the layouts for the info window, title and snippet.
-                View infoWindow = getLayoutInflater().inflate(R.layout.custom_info_contents,
-                        (FrameLayout) findViewById(R.id.map), false);
-
-                TextView title = ((TextView) infoWindow.findViewById(R.id.title));
-                title.setText(marker.getTitle());
-
-                TextView snippet = ((TextView) infoWindow.findViewById(R.id.snippet));
-                snippet.setText(marker.getSnippet());
-
-                return infoWindow;
-            }
-        });*/
+        //  infoWindow();
 
         // Prompt the user for permission.
         getLocationPermission();

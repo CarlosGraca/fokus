@@ -29,12 +29,11 @@
 
     <uses-permission android:name="com.example.carlos.fokus.permission.MAPS_RECEIVE" />
 
-
     <uses-permission-sdk-23 android:name="android.permission.CAMERA" />
 
-    <uses-feature android:name="android.hardware.camera"
+    <uses-feature
+        android:name="android.hardware.camera"
         android:required="true" />
-
 
     <application
         android:allowBackup="true"
@@ -57,10 +56,13 @@
         <!-- A child of the main activity -->
         <activity
             android:name=".NewFoku"
-                 android:parentActivityName=".MainActivity">
-             <!--ta-data
+            android:parentActivityName=".MainActivity">
+
+            <!--
+                 ta-data
                    android:name="android.support.PARENT_ACTIVITY"
-                   android:value="com.example.carlos.fokus.MainActivity" />-->
+                   android:value="com.example.carlos.fokus.MainActivity" />
+            -->
         </activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -72,12 +74,11 @@
         -->
         <meta-data
             android:name="com.google.android.gms.version"
-
             android:value="@integer/google_play_services_version" />
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDBUeVUGHBDr1xqVIsxVL_AiG2SLpKw-ng" />
+
     </application>
 
 </manifest>

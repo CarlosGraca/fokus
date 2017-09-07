@@ -12,6 +12,7 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         resValue "string", "google_maps_key", (project.findProperty("AIzaSyCUe45Uzk2W2-rcAQPFOdyY3ykAcSQVdZc") ?: "")
+        vectorDrawables.useSupportLibrary = true
     }
     dexOptions {
         jumboMode true
@@ -32,12 +33,13 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
+
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:design:25.3.1'
-
     compile 'com.google.android.gms:play-services:11.2.0'
     compile 'com.android.support:multidex:1.0.0'
+    compile 'com.android.support:support-vector-drawable:25.3.1'
     testCompile 'junit:junit:4.12'
 }
 
@@ -46,5 +48,7 @@ repositories {
         url "https://maven.google.com"
     }
 }
+
+
 
 
