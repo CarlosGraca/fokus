@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         LatLng currentLocation = new LatLng(14.9364475, -23.5067295);
 
-        //mMap.addMarker(new MarkerOptions().position(currentLocation).title("Marker in Sydney"));
+        mMap.addMarker(new MarkerOptions().position(currentLocation).title("Marker in Sydney"));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 13));
     }
 
