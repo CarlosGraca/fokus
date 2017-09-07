@@ -1,24 +1,17 @@
 package com.example.carlos.fokus;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-
-import android.location.LocationListener;
 import android.widget.Toast;
-
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -29,7 +22,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -37,10 +30,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import fragments.FokusDescription;
+import helpers.MapFunctions;
+
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback{
     private GoogleMap mMap;
     private RequestQueue requestQueue;
-    private String apiUrl = "http://app.yournit.com/spots";
+    private String apiUrl = "http://pocteam2.gov.cv/public/spots";
     private static final String TAG = "MainActivity";
 
     @Override
@@ -106,13 +102,23 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                                     String deleted_at = jsonObj.getString("deleted_at");
                                     String created_at = jsonObj.getString("created_at");
                                     String updated_at = jsonObj.getString("updated_at");
-                                    //String description = jsonObj.getString("description");
+                                    String description = jsonObj.getString("description");
 
                                     showLog("Response fom api:  " + "LATITUDE: " + lat + " LONGITUDE: " +longit);
 
                                     showToast("Response fom api:  " + "LATITUDE: " + lat + " LONGITUDE: " +longit);
 
-                                    updateMapMarkers(mMap, lat, longit, name);
+                                    LatLng currentLocation = new LatLng(lat, longit);
+
+                                    if (name.equalsIgnoreCase("Praia")) {
+
+                                        MapFunctions.updateMarkers(
+                                                mMap,
+                                                name,
+                                                currentLocation,
+                                                BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)
+                                        );
+                                    }
 
                                 } catch (JSONException e) {
                                     showLog("Volley, json object invalid:  " + e.getMessage());
@@ -182,15 +188,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         LatLng currentLocation = new LatLng(14.9364475, -23.5067295);
 
-        //mMap.addMarker(new MarkerOptions().position(currentLocation).title("Marker in Sydney"));
+        mMap.addMarker(new MarkerOptions().
+                position(currentLocation).
+                title("Marker in Sydney"));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 13));
     }
 
-    public void updateMapMarkers (GoogleMap map, double lat, double longt, String title) {
+    public void showFokusDescription () {
 
-        map.addMarker(new MarkerOptions()
-                .position(new LatLng(lat, longt))
-                .title(title)
-        );
+        FragmentTransaction ft = getSupportFragmentManager()
+                .beginTransaction();
+
+        ft.addToBackStack(null);
+
+        DialogFragment dialog = FokusDescription.newInstance(1);
+        dialog.show(ft, "Dialog");
     }
 }

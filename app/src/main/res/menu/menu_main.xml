@@ -13,4 +13,11 @@
         android:orderInCategory="100"
         android:title="@string/btn_api_test"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_my_points"
+        android:orderInCategory="100"
+        android:title="@string/my_points"
+        app:showAsAction="never" />
+
 </menu>

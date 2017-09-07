@@ -57,13 +57,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <!-- A child of the main activity -->
         <activity
             android:name=".NewFoku"
-            android:parentActivityName=".MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.carlos.fokus.MainActivity" />
+                 android:parentActivityName=".MainActivity">
+             <!--ta-data
+                   android:name="android.support.PARENT_ACTIVITY"
+                   android:value="com.example.carlos.fokus.MainActivity" />-->
         </activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -80,8 +81,8 @@
             android:value="@integer/google_play_services_version" />
 
         <meta-data
-            android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyCUe45Uzk2W2-rcAQPFOdyY3ykAcSQVdZc" />
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDBUeVUGHBDr1xqVIsxVL_AiG2SLpKw-ng" />
     </application>
 
 </manifest>
