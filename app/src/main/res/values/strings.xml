@@ -4,4 +4,5 @@
     <string name="title_activity_maps">Map</string>
     <string name="description">Descrição</string>
     <string name="send">Enviar</string>
+    <string name="btn_api_test">Test Api</string>
 </resources>
