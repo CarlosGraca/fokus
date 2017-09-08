@@ -24,6 +24,7 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
@@ -33,11 +34,19 @@ import org.json.JSONObject;
 import fragments.FokusDescription;
 import helpers.MapFunctions;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback{
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener{
     private GoogleMap mMap;
     private RequestQueue requestQueue;
-    private String apiUrl = "http://pocteam2.gov.cv/public/spots";
+    //private String apiUrl = "http://pocteam2.gov.cv/public/spots";
+    private String apiUrl = "http://app.yournit.com/spots";
     private static final String TAG = "MainActivity";
+
+    // my api fields returned
+    //private String description;
+    private String name;
+
+    // marker to setup click listener
+    private Marker mMarker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,14 +104,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                                     JSONObject jsonObj = response.getJSONObject(i);
 
                                     int id = jsonObj.getInt("id");
-                                    String name = jsonObj.getString("name");
+                                    name = jsonObj.getString("name");
                                     double lat = jsonObj.getDouble("lat");
                                     double longit = jsonObj.getDouble("long");
                                     int user_id = jsonObj.getInt("user_id");
                                     String deleted_at = jsonObj.getString("deleted_at");
                                     String created_at = jsonObj.getString("created_at");
                                     String updated_at = jsonObj.getString("updated_at");
-                                    String description = jsonObj.getString("description");
+                                    //String description = jsonObj.getString("description");
 
                                     showLog("Response fom api:  " + "LATITUDE: " + lat + " LONGITUDE: " +longit);
 
@@ -110,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                                     LatLng currentLocation = new LatLng(lat, longit);
 
-                                    if (name.equalsIgnoreCase("Praia")) {
+                                    //if (name.equalsIgnoreCase("Praia")) {
 
                                         MapFunctions.updateMarkers(
                                                 mMap,
@@ -118,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                                                 currentLocation,
                                                 BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)
                                         );
-                                    }
+                                    //}
 
                                 } catch (JSONException e) {
                                     showLog("Volley, json object invalid:  " + e.getMessage());
@@ -188,20 +197,43 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         LatLng currentLocation = new LatLng(14.9364475, -23.5067295);
 
-        mMap.addMarker(new MarkerOptions().
+        mMarker = mMap.addMarker(new MarkerOptions().
                 position(currentLocation).
                 title("Marker in Sydney"));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 13));
+
+        mMap.setOnMarkerClickListener(this);
     }
 
-    public void showFokusDescription () {
+    public void showFokusDescription (String description) {
 
         FragmentTransaction ft = getSupportFragmentManager()
                 .beginTransaction();
 
         ft.addToBackStack(null);
 
-        DialogFragment dialog = FokusDescription.newInstance(1);
+        DialogFragment dialog = FokusDescription.newInstance(description);
         dialog.show(ft, "Dialog");
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+
+        if (marker.equals(mMarker)) {
+
+            if (!name.isEmpty() && name != null) {
+
+                showFokusDescription(name);
+
+            } else {
+
+                showFokusDescription("Nenhuma descricao do foku");
+
+            }
+
+
+            //showToast("Marker clicked");
+        }
+        return true;
     }
 }
