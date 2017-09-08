@@ -15,15 +15,15 @@ import com.example.carlos.fokus.R;
 
 public class FokusDescription extends DialogFragment {
 
-    private int mNum;
+    private String mDesc;
 
     // create a dialog instance
-    public static FokusDescription newInstance (int num) {
+    public static FokusDescription newInstance (String description) {
 
         FokusDescription fokusDescription = new FokusDescription();
 
         Bundle args = new Bundle();
-        args.putInt("num", num);
+        args.putString("description", description);
         fokusDescription.setArguments(args);
 
         return fokusDescription;
@@ -33,7 +33,7 @@ public class FokusDescription extends DialogFragment {
     public void onCreate (Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mNum = getArguments().getInt("num");
+        mDesc = getArguments().getString("description");
     }
 
     @Override
@@ -43,9 +43,9 @@ public class FokusDescription extends DialogFragment {
         View v = inflater.inflate(R.layout.custom_info_contents, conatiner, false);
 
         // pickup a view from layout resource
-        View title = v.findViewById(R.id.title);
+        View description = v.findViewById(R.id.description);
 
-        ((TextView)title).setText("Dialog" + mNum);
+        ((TextView)description).setText("Dialog" + mDesc);
 
         return v;
     }
