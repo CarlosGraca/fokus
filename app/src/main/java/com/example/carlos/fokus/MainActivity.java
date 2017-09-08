@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.RatingBar;
 import android.widget.Toast;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -38,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap mMap;
     private RequestQueue requestQueue;
     //private String apiUrl = "http://pocteam2.gov.cv/public/spots";
-    private String apiUrl = "http://app.yournit.com/spots";
+    private String apiUrl = MapFunctions.apiUrl + "/spots";
     private static final String TAG = "MainActivity";
 
     // my api fields returned
@@ -62,8 +63,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         mapFragment.getMapAsync(this);
 
-
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -71,9 +70,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();*/
-                //Click Button
+
                 Intent intent = new Intent(MainActivity.this, NewFoku.class);
                 startActivity(intent);
             }
@@ -185,6 +182,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
 
         if (id == R.id.action_api_test) {
+            callApi();
+        }
+
+        if (id == R.id.action_my_points) {
+            callApi();
+        }
+
+        if (id == R.id.action_about) {
+            callApi();
+        }
+
+        if (id == R.id.action_exit) {
             callApi();
         }
 

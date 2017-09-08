@@ -5,6 +5,7 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.example.carlos.fokus.R;
@@ -16,6 +17,8 @@ import com.example.carlos.fokus.R;
 public class FokusDescription extends DialogFragment {
 
     private String mDesc;
+
+    public RatingBar mRatingBar;
 
     // create a dialog instance
     public static FokusDescription newInstance (String description) {
@@ -45,7 +48,12 @@ public class FokusDescription extends DialogFragment {
         // pickup a view from layout resource
         View description = v.findViewById(R.id.description);
 
-        ((TextView)description).setText("Dialog" + mDesc);
+        ((TextView)description).setText("" + mDesc);
+        description.setEnabled(false);
+
+        mRatingBar = (RatingBar) v.findViewById(R.id.ratingBar);
+        //mRatingBar.setClickable(false);
+        mRatingBar.setEnabled(false);
 
         return v;
     }
