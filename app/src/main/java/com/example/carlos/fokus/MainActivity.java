@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.RatingBar;
 import android.widget.Toast;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -32,8 +31,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import fragments.FokusDescription;
-import helpers.MapFunctions;
+import com.example.carlos.fokus.fragments.FokusDescription;
+import com.example.carlos.fokus.helpers.MapFunctions;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener{
     private GoogleMap mMap;

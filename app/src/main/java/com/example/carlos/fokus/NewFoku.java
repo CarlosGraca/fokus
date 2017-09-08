@@ -24,12 +24,9 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
+import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.StringRequestListener;
+import com.example.carlos.fokus.services.SaveFokusDetailsService;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.GeoDataClient;
@@ -49,10 +46,8 @@ import com.google.android.gms.tasks.Task;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
-import helpers.MapFunctions;
+import com.example.carlos.fokus.helpers.MapFunctions;
 
 
 public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
@@ -82,11 +77,14 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
 
     private Uri file;
 
-    private RequestQueue queue ;
 
     String deviceID;
     String mDescription;
     String mRating;
+    String mTitle;
+    String mLat;
+    String mLong;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +94,8 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
             mLastKnownLocation = savedInstanceState.getParcelable(KEY_LOCATION);
             mCameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION);
         }*/
+
+
 
         setContentView(R.layout.activity_new_foku);
 
@@ -115,12 +115,13 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.mapLocation);
         mapFragment.getMapAsync(this);
 
-        queue = Volley.newRequestQueue(this);  // this = context
+        //queue = Volley.newRequestQueue(this);  // this = context
 
         //getting unique id for device
-        String deviceID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        deviceID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
         Log.d("deviceID",deviceID);
+
 
     }
 
@@ -167,9 +168,16 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
         });
     }
 
-    public void showDialogFokus(Marker marker){
+
+
+    public void showDialogFokus(Marker mMarker){
+
+        marker = mMarker;
+
+        final String url = MapFunctions.apiUrl + "/spots";
+
         final Dialog dialog = new Dialog(this);
-        dialog.setTitle("Marque um novo foku");
+
         dialog.setContentView(R.layout.custom_info_contents);
 
         imageView = (ImageView) dialog.findViewById(R.id.imageCamera);
@@ -206,7 +214,7 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
             @Override
             public void onClick(View v) {
                 mDescription = String.valueOf(description.getText());
-                saveFokus();
+                saveFokus(marker);
             }
         });
 
@@ -244,24 +252,17 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
                 locationResult.addOnCompleteListener(this, new OnCompleteListener<Location>() {
                     @Override
                     public void onComplete(@NonNull Task<Location> task) {
-                        if (task.isSuccessful()) {
+                        if  (task.isSuccessful() && task.getResult() != null) {
                             // Set the map's camera position to the current location of the device.
                             mLastKnownLocation = task.getResult();
 
-                            if (mLastKnownLocation != null){
                                 marker = mMap.addMarker(new MarkerOptions().position(new LatLng(mLastKnownLocation.getLatitude(),
                                     mLastKnownLocation.getLongitude()))
                                                                .draggable(true));
 
                                  mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLastKnownLocation.getLatitude(),
                                     mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
-                            }else{
-                                Log.d(TAG, "Current location is null. Using defaults.");
-                                Log.e(TAG, "Exception: %s", task.getException());
-                                marker = mMap.addMarker(new MarkerOptions().position(mDefaultLocation));
-                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
-                                mMap.getUiSettings().setMyLocationButtonEnabled(false);
-                            }
+
                         } else {
                             Log.d(TAG, "Current location is null. Using defaults.");
                             Log.e(TAG, "Exception: %s", task.getException());
@@ -392,47 +393,22 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
                 "IMG_"+ timeStamp + ".jpg");
     }
 
-    public void saveFokus(){
-        String url = MapFunctions.apiUrl + "/spots/store";
-        /*StringRequest postRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>()
-                {
-                    @Override
-                    public void onResponse(String response) {
-                        // response
-                        Log.d("Response", response);
-                    }
-                },
-                new Response.ErrorListener()
-                {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // error
-                        Log.d("Error.Response", String.valueOf(error));
-                    }
-                }
-        ) {
+    public void saveFokus(final Marker marker){
+        String url = MapFunctions.apiUrl + "/spots";
+        mLong = String.valueOf(marker.getPosition().longitude);
+        mLat = String.valueOf(marker.getPosition().latitude);
+
+        new SaveFokusDetailsService().call(url, mLong, mLat, deviceID, mDescription, new StringRequestListener() {
             @Override
-            protected Map<String, String> getParams()
-            {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("name", "Alif");
-                params.put("description", mDescription);
-                params.put("lat", "14.9364435");
-                params.put("long", "-23.5064295");
-                params.put("device_id", deviceID);
-                params.put("rating_value", mRating);
-
-                return params;
+            public void onResponse(String response) {
+                Log.d("response", response);
             }
-        };
-        queue.add(postRequest);*/
-        Log.d("POST",url);
-        Log.d("mDescription",mDescription);
-       // Log.d("deviceID",deviceID);
-        Log.d("rating_value",mRating);
-       // Log.d("marketTile",marker.getTitle());
 
+            @Override
+            public void onError(ANError anError) {
+                Log.d("response", String.valueOf(anError));
+            }
+        });
 
     }
 }

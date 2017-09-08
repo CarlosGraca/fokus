@@ -1,15 +1,9 @@
-package helpers;
-
-import android.content.Context;
-import android.provider.Settings;
-import android.telephony.TelephonyManager;
+package com.example.carlos.fokus.helpers;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import static java.security.AccessController.getContext;
 
 
 /**
