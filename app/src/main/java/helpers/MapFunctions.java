@@ -1,13 +1,16 @@
 package helpers;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.support.v4.app.ActivityCompat;
+import android.content.Context;
+import android.provider.Settings;
+import android.telephony.TelephonyManager;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import static java.security.AccessController.getContext;
+
 
 /**
  * Created by eceybrito on 07/09/2017.
@@ -16,6 +19,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class MapFunctions {
 
     private static final String TAG = "MapFunctions";
+
+    public static String apiUrl = "http://pocteam2.gov.cv/public";
+
 
     public MapFunctions() {
     }
@@ -36,4 +42,5 @@ public class MapFunctions {
 
 
     }
+
 }
