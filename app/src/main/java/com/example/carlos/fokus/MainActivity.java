@@ -23,6 +23,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.carlos.fokus.ui.DisplayUI;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -35,7 +36,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import constants.ApiUrls;
+import com.example.carlos.fokus.constants.ApiUrls;
 import com.example.carlos.fokus.helpers.MapFunctions;
 
 public class MainActivity extends AppCompatActivity
@@ -56,6 +57,8 @@ public class MainActivity extends AppCompatActivity
 
     private static final CharSequence[] MAP_TYPE_ITEMS =
             {"Mapa de rua", "Hibrido", "Satellite", "Terreno"};
+
+    private DisplayUI ui = new DisplayUI(this.getApplicationContext());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,14 +128,14 @@ public class MainActivity extends AppCompatActivity
 
 
                                 } catch (JSONException e) {
-                                    showLog("Volley, json object invalid:  " + e.getMessage());
+                                    ui.showLog("Volley, json object invalid:  " + e.getMessage());
                                 }
                             }
 
                         } else {
 
                             // if there is no response, print something
-                            showToast("No response from api");
+                            ui.showToast("No response from api");
                         }
                     }
                 },
@@ -142,7 +145,7 @@ public class MainActivity extends AppCompatActivity
                     public void onErrorResponse(VolleyError error) {
 
                         // if there is a connection problem, so log this error
-                        showToast("Volley error:  " + error.toString());
+                        ui.showToast("Volley error:  " + error.toString());
                     }
                 }
 
@@ -150,15 +153,6 @@ public class MainActivity extends AppCompatActivity
 
         requestQueue.add(arrReq);
     }
-
-    private void showLog(String s) {
-        Log.d(TAG, s);
-    }
-
-    private void showToast(String s) {
-        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

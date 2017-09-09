@@ -1,4 +1,4 @@
-package constants;
+package com.example.carlos.fokus.constants;
 
 /**
  * Created by eceybrito on 08/09/2017.
