@@ -79,67 +79,33 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void callApi() {
+        // verify if there a response back do something with it
+        /*if (response.length() > 0) {
 
-        /*JsonArrayRequest arrReq = new JsonArrayRequest(
-                Request.Method.GET,
-                apiUrl,
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
+            // loop through them all
+            for (int i = 0; i < response.length(); i++) {
 
-                        // verify if there a response back do something with it
-                        if (response.length() > 0) {
+                try {
 
-                            // loop through them all
-                            for (int i = 0; i < response.length(); i++) {
+                    JSONObject jsonObj = response.getJSONObject(i);
 
-                                try {
+                    int id = jsonObj.getInt("id");
+                    name = jsonObj.getString("name");
+                    double lat = jsonObj.getDouble("lat");
+                    double longit = jsonObj.getDouble("long");
 
-                                    JSONObject jsonObj = response.getJSONObject(i);
+                    LatLng currentLocation = new LatLng(lat, longit);
 
-                                    int id = jsonObj.getInt("id");
-                                    name = jsonObj.getString("name");
-                                    double lat = jsonObj.getDouble("lat");
-                                    double longit = jsonObj.getDouble("long");
-
-                                    LatLng currentLocation = new LatLng(lat, longit);
-
-                                    MapFunctions.updateMarkers(
-                                            mMap,
-                                            name,
-                                            //id,
-                                            currentLocation,
-                                            BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)
-                                    );
-
-
-                                } catch (JSONException e) {
-                                    //ui.showLog("Volley, json object invalid:  " + e.getMessage());
-                                    e.printStackTrace();
-                                }
-                            }
-
-                        } else {
-
-                            // if there is no response, print something
-                            // ui.showToast("No response from api");
-                        }
-                    }
-                },
-
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                        // if there is a connection problem, so log this error
-                        // ui.showToast("Volley error:  " + error.toString());
-                        error.printStackTrace();
-                    }
+                    MapFunctions.updateMarkers(
+                            mMap,
+                            name,
+                            //id,
+                            currentLocation,
+                            BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)
+                    );
                 }
-
-        );
-
-        requestQueue.add(arrReq);*/
+            }
+        }*/
     }
 
     @Override
