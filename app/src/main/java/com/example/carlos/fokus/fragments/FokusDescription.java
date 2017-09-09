@@ -1,4 +1,4 @@
-package fragments;
+package com.example.carlos.fokus.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
