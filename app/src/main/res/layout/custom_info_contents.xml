@@ -11,7 +11,7 @@
         android:layout_below="@+id/toolbarNewFokus">
 
         <ImageView
-            android:id="@+id/imageCamera"
+            android:id="@+id/imgFoku"
             android:layout_width="fill_parent"
             android:layout_height="200dp"
             android:layout_centerHorizontal="true"

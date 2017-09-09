@@ -12,11 +12,14 @@
     <string name="option_get_place">Get place</string>
     <string name="pick_place">Choose a place</string>
 
-    <string name="my_points">Meus Fokus</string>
+    <string name="my_points">Lista de fokus</string>
 
     <string name="m_rating">Nivel de Perigo</string>
     <string name="action_about">Sobre</string>
     <string name="action_config">Definicoes</string>
     <string name="action_exit">Sair</string>
+    <string name="map_type">Tipo de mapa</string>
+    <string name="map_type_terain">Terreno</string>
+    <string name="map_type_satelite">Satelite</string>
 
 </resources>

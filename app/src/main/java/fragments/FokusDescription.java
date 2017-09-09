@@ -5,9 +5,12 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.carlos.fokus.R;
 
 /**
@@ -20,13 +23,21 @@ public class FokusDescription extends DialogFragment {
 
     public RatingBar mRatingBar;
 
+    private ImageView imageFoku;
+
+    private Button btEnviar;
+
+    private String imageFokuUrl;
+
     // create a dialog instance
-    public static FokusDescription newInstance (String description) {
+    public static FokusDescription newInstance (String name, String description, int device_id) {
 
         FokusDescription fokusDescription = new FokusDescription();
 
         Bundle args = new Bundle();
+        args.putString("name", name);
         args.putString("description", description);
+        args.putInt("description", device_id);
         fokusDescription.setArguments(args);
 
         return fokusDescription;
@@ -50,6 +61,14 @@ public class FokusDescription extends DialogFragment {
 
         ((TextView)description).setText("" + mDesc);
         description.setEnabled(false);
+
+        imageFoku = (ImageView) v.findViewById(R.id.imgFoku);
+
+        // using glide to set image to image view
+        /*Glide.with(this)
+            .load(imageFokuUrl)
+            .into(imageFoku); */
+
 
         mRatingBar = (RatingBar) v.findViewById(R.id.ratingBar);
         //mRatingBar.setClickable(false);
