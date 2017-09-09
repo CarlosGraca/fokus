@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.StringRequestListener;
+import com.example.carlos.fokus.constants.Constants;
 import com.example.carlos.fokus.services.SaveFokusDetailsService;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -94,8 +95,6 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
             mLastKnownLocation = savedInstanceState.getParcelable(KEY_LOCATION);
             mCameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION);
         }*/
-
-
 
         setContentView(R.layout.activity_new_foku);
 
@@ -174,7 +173,7 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
 
         marker = mMarker;
 
-        final String url = MapFunctions.apiUrl + "/spots";
+        final String url =  Constants.serverUrl+"/posts";
 
         final Dialog dialog = new Dialog(this);
 
@@ -219,26 +218,6 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
         });
 
         dialog.show();
-    }
-
-    public void infoWindow(){
-        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-            @Override
-            public View getInfoWindow(Marker marker) {
-                return null;
-            }
-
-            @Override
-            public View getInfoContents(Marker marker) {
-                // Inflate the layouts for the info window, title and snippet.
-                View infoWindow = getLayoutInflater().inflate(R.layout.custom_info_contents,
-                        (FrameLayout) findViewById(R.id.mapLocation), false);
-
-                TextView title = ((TextView) infoWindow.findViewById(R.id.description));
-                //title.setText(marker.getTitle());
-                return infoWindow;
-            }
-        });
     }
 
     private void getDeviceLocation() {
@@ -394,7 +373,7 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
     }
 
     public void saveFokus(final Marker marker){
-        final String url = MapFunctions.apiUrl + "/spots";
+        final String url =  Constants.serverUrl + "/spots";
         mLong = String.valueOf(marker.getPosition().longitude);
         mLat = String.valueOf(marker.getPosition().latitude);
 

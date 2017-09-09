@@ -3,7 +3,7 @@ package com.example.carlos.fokus;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class Fokus extends AppCompatActivity {
+public class ListFokus extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -14,27 +14,22 @@ public class MapFunctions {
 
     private static final String TAG = "MapFunctions";
 
-    public static String apiUrl = "http://app.yournit.com";
-
-
     public MapFunctions() {
     }
 
     public static void updateMarkers(GoogleMap map,
                                      String title,
+                                     int id,
                                      LatLng latLng,
                                      BitmapDescriptor bitmapDescriptor) {
 
         map.addMarker(new MarkerOptions()
                 .position(latLng)
                 .title(title)
+                .zIndex(id)
                 .icon(bitmapDescriptor));
     }
 
-    public void changeMarkerColor(GoogleMap map,
-                                  String type) {
 
-
-    }
 
 }

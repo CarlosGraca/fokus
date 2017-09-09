@@ -81,7 +81,15 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDBUeVUGHBDr1xqVIsxVL_AiG2SLpKw-ng" />
 
-        <activity android:name=".Fokus"></activity>
+        <activity android:name=".ListFokus"
+            android:parentActivityName=".MainActivity">
+
+            <meta-data
+                   android:name="android.support.PARENT_ACTIVITY"
+                   android:value="com.example.carlos.fokus.MainActivity" />
+        </activity>
+
+
     </application>
 
 </manifest>

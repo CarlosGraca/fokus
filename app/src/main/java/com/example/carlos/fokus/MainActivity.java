@@ -1,23 +1,28 @@
 package com.example.carlos.fokus;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.RatingBar;
+import android.widget.TextView;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.carlos.fokus.ui.DisplayUI;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -25,28 +30,33 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.example.carlos.fokus.fragments.FokusDescription;
+import com.example.carlos.fokus.constants.Constants;
 import com.example.carlos.fokus.helpers.MapFunctions;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener{
+public class MainActivity extends AppCompatActivity
+        implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener  {
     private GoogleMap mMap;
     private RequestQueue requestQueue;
-    //private String apiUrl = "http://pocteam2.gov.cv/public/spots";
-    private String apiUrl = MapFunctions.apiUrl + "/spots";
+    private String apiUrl = Constants.serverUrl+"/posts";
     private static final String TAG = "MainActivity";
 
     // my api fields returned
     //private String description;
+    private int device_id;
     private String name;
+    private String description;
 
     // marker to setup click listener
     private Marker mMarker;
+
+    private static final CharSequence[] MAP_TYPE_ITEMS =
+            {"Mapa de rua", "Hibrido", "Satellite", "Terreno"};
+
+    private DisplayUI ui ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +67,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public void initializeComponents () {
+
+        ui = new DisplayUI(this.getApplicationContext());
 
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
 
@@ -103,37 +115,27 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                                     name = jsonObj.getString("name");
                                     double lat = jsonObj.getDouble("lat");
                                     double longit = jsonObj.getDouble("long");
-                                    int user_id = jsonObj.getInt("user_id");
-                                    String deleted_at = jsonObj.getString("deleted_at");
-                                    String created_at = jsonObj.getString("created_at");
-                                    String updated_at = jsonObj.getString("updated_at");
-                                    //String description = jsonObj.getString("description");
-
-                                    showLog("Response fom api:  " + "LATITUDE: " + lat + " LONGITUDE: " +longit);
-
-                                    showToast("Response fom api:  " + "LATITUDE: " + lat + " LONGITUDE: " +longit);
 
                                     LatLng currentLocation = new LatLng(lat, longit);
 
-                                    //if (name.equalsIgnoreCase("Praia")) {
+                                    MapFunctions.updateMarkers(
+                                            mMap,
+                                            name,
+                                            id,
+                                            currentLocation,
+                                            BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)
+                                    );
 
-                                        MapFunctions.updateMarkers(
-                                                mMap,
-                                                name,
-                                                currentLocation,
-                                                BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)
-                                        );
-                                    //}
 
                                 } catch (JSONException e) {
-                                    showLog("Volley, json object invalid:  " + e.getMessage());
+                                    ui.showLog("Volley, json object invalid:  " + e.getMessage());
                                 }
                             }
 
                         } else {
 
                             // if there is no response, print something
-                            showToast("No response from api");
+                            ui.showToast("No response from api");
                         }
                     }
                 },
@@ -143,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     public void onErrorResponse(VolleyError error) {
 
                         // if there is a connection problem, so log this error
-                        showToast("Volley error:  " + error.toString());
+                        ui.showToast("Volley error:  " + error.toString());
                     }
                 }
 
@@ -151,15 +153,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         requestQueue.add(arrReq);
     }
-
-    private void showLog(String s) {
-        Log.d(TAG, s);
-    }
-
-    private void showToast(String s) {
-        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -170,32 +163,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        if (id == R.id.action_api_test) {
-            callApi();
-        }
-
         if (id == R.id.action_my_points) {
-            callApi();
+            Intent intent = new Intent(MainActivity.this, com.example.carlos.fokus.ListFokus.class);
+            startActivity(intent);
         }
-
         if (id == R.id.action_about) {
-            callApi();
+            return  true;
         }
-
-        if (id == R.id.action_exit) {
-            callApi();
+        if (id == R.id.action_my_map_type) {
+            showMapTypeSelectorDialog();
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -205,43 +184,84 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         LatLng currentLocation = new LatLng(14.9364475, -23.5067295);
 
-        mMarker = mMap.addMarker(new MarkerOptions().
+        /*mMarker = mMap.addMarker(new MarkerOptions().
                 position(currentLocation).
-                title("Marker in Sydney"));
+                title("Marker in Sydney"));*/
+
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 13));
 
         mMap.setOnMarkerClickListener(this);
+
     }
 
-    public void showFokusDescription (String description) {
+    public void showDialogFokus(Marker marker){
+        final Dialog dialog = new Dialog(this);
+        dialog.setTitle("Detalhes do foku");
 
-        FragmentTransaction ft = getSupportFragmentManager()
-                .beginTransaction();
+        dialog.setContentView(R.layout.custom_info_contents);
 
-        ft.addToBackStack(null);
+        ImageView imageView = (ImageView) dialog.findViewById(R.id.imageCamera);
 
-        DialogFragment dialog = FokusDescription.newInstance(description);
-        dialog.show(ft, "Dialog");
+        // set the custom dialog components - text, image and button
+        final TextView description = (TextView) dialog.findViewById(R.id.description);
+
+        Button dialogButton = (Button) dialog.findViewById(R.id.btSend);
+        RatingBar ratingBar = (RatingBar) dialog.findViewById(R.id.ratingBar);
+
+        dialogButton.setVisibility(View.GONE);
+        ratingBar.setEnabled(false);
+
+        dialog.show();
     }
 
-    @Override
+    private void showMapTypeSelectorDialog() {
+        // Prepare the dialog by setting up a Builder.
+        final String fDialogTitle = "Selecione o tipo de mapa";
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(fDialogTitle);
+
+        // Find the current map type to pre-check the item representing the current state.
+        int checkItem = mMap.getMapType() - 1;
+
+        // Add an OnClickListener to the dialog, so that the selection will be handled.
+        builder.setSingleChoiceItems(
+                MAP_TYPE_ITEMS,
+                checkItem,
+                new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int item) {
+                        // Locally create a finalised object.
+
+                        // Perform an action depending on which item was selected.
+                        switch (item) {
+                            case 1:
+                                mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                                break;
+                            case 2:
+                                mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+                                break;
+                            case 3:
+                                mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                                break;
+                            default:
+                                mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                        }
+                        dialog.dismiss();
+                    }
+                }
+        );
+
+        // Build the dialog and show it.
+        AlertDialog fMapTypeDialog = builder.create();
+        fMapTypeDialog.setCanceledOnTouchOutside(true);
+        fMapTypeDialog.show();
+    }
+
     public boolean onMarkerClick(Marker marker) {
 
-        if (marker.equals(mMarker)) {
+        showDialogFokus(marker);
 
-            if (!name.isEmpty() && name != null) {
-
-                showFokusDescription(name);
-
-            } else {
-
-                showFokusDescription("Nenhuma descricao do foku");
-
-            }
-
-
-            //showToast("Marker clicked");
-        }
         return true;
     }
+
 }
