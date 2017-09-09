@@ -12,24 +12,19 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapFunctions {
 
-    private static final String TAG = "MapFunctions";
-
-    public static String apiUrl = "http://pocteam2.gov.cv/public";
-
-
     public MapFunctions() {
     }
 
     public static void updateMarkers(GoogleMap map,
                                      String title,
-                                     int id,
+                                     //int id,
                                      LatLng latLng,
                                      BitmapDescriptor bitmapDescriptor) {
 
         map.addMarker(new MarkerOptions()
                 .position(latLng)
                 .title(title)
-                .zIndex(id)
+                //.zIndex(id)
                 .icon(bitmapDescriptor));
     }
 

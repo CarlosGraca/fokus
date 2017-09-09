@@ -8,7 +8,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,13 +15,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.Volley;
 import com.example.carlos.fokus.ui.DisplayUI;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -32,7 +24,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,13 +33,9 @@ import com.example.carlos.fokus.helpers.MapFunctions;
 public class MainActivity extends AppCompatActivity
         implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener  {
     private GoogleMap mMap;
-    private RequestQueue requestQueue;
+    //private RequestQueue requestQueue;
     private String apiUrl = ApiUrls.apiUrlTest;
     private static final String TAG = "MainActivity";
-
-    // my api fields returned
-    //private String description;
-    private int device_id;
     private String name;
     private String description;
 
@@ -87,14 +74,14 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        requestQueue = Volley.newRequestQueue(this);
+        //requestQueue = Volley.newRequestQueue(this);
 
         callApi();
     }
 
     private void callApi() {
 
-        JsonArrayRequest arrReq = new JsonArrayRequest(
+        /*JsonArrayRequest arrReq = new JsonArrayRequest(
                 Request.Method.GET,
                 apiUrl,
                 new Response.Listener<JSONArray>() {
@@ -121,21 +108,22 @@ public class MainActivity extends AppCompatActivity
                                     MapFunctions.updateMarkers(
                                             mMap,
                                             name,
-                                            id,
+                                            //id,
                                             currentLocation,
                                             BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)
                                     );
 
 
                                 } catch (JSONException e) {
-                                    ui.showLog("Volley, json object invalid:  " + e.getMessage());
+                                    //ui.showLog("Volley, json object invalid:  " + e.getMessage());
+                                    e.printStackTrace();
                                 }
                             }
 
                         } else {
 
                             // if there is no response, print something
-                            ui.showToast("No response from api");
+                            // ui.showToast("No response from api");
                         }
                     }
                 },
@@ -145,13 +133,14 @@ public class MainActivity extends AppCompatActivity
                     public void onErrorResponse(VolleyError error) {
 
                         // if there is a connection problem, so log this error
-                        ui.showToast("Volley error:  " + error.toString());
+                        // ui.showToast("Volley error:  " + error.toString());
+                        error.printStackTrace();
                     }
                 }
 
         );
 
-        requestQueue.add(arrReq);
+        requestQueue.add(arrReq);*/
     }
 
     @Override
@@ -273,7 +262,7 @@ public class MainActivity extends AppCompatActivity
 
     public boolean onMarkerClick(Marker marker) {
 
-        showDialogFokus(marker);
+        //showDialogFokus(marker);
 
         return true;
     }

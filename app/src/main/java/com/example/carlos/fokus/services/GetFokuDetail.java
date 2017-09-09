@@ -1,14 +1,5 @@
 package com.example.carlos.fokus.services;
 
-import android.util.Log;
-
-import com.androidnetworking.AndroidNetworking;
-import com.androidnetworking.common.Priority;
-import com.androidnetworking.error.ANError;
-import com.androidnetworking.interfaces.JSONObjectRequestListener;
-
-import org.json.JSONObject;
-
 /**
  * Created by eceybrito on 08/09/2017.
  */
@@ -17,7 +8,7 @@ public class GetFokuDetail implements IGetFokusDetailService{
     @Override
     public void call(int id, String url) {
 
-        AndroidNetworking.get(url)
+        /*AndroidNetworking.get(url)
                 .addPathParameter("id", String.valueOf(id))
                 .setTag(this)
                 .setPriority(Priority.LOW)
@@ -25,12 +16,15 @@ public class GetFokuDetail implements IGetFokusDetailService{
             @Override
             public void onResponse(JSONObject response) {
 
+                // update dialog, but first serialize thi JsonObject
+
             }
 
             @Override
             public void onError(ANError anError) {
 
+                // log errors
             }
-        });
+        });*/
     }
 }
