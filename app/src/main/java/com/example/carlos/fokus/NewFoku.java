@@ -85,10 +85,10 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        /*if (savedInstanceState != null) {
+        if (savedInstanceState != null) {
             mLastKnownLocation = savedInstanceState.getParcelable(KEY_LOCATION);
             mCameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION);
-        }*/
+        }
 
         setContentView(R.layout.activity_new_foku);
 
@@ -115,20 +115,22 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
 
         Log.d("deviceID",deviceID);
 
-
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[] { android.Manifest.permission.CAMERA, android.Manifest.permission.WRITE_EXTERNAL_STORAGE }, 0);
+        }
     }
 
     /**
      * Saves the state of the map when the activity is paused.
      */
-    /*@Override
+    @Override
     protected void onSaveInstanceState(Bundle outState) {
         if (mMap != null) {
             outState.putParcelable(KEY_CAMERA_POSITION, mMap.getCameraPosition());
             outState.putParcelable(KEY_LOCATION, mLastKnownLocation);
             super.onSaveInstanceState(outState);
         }
-    }*/
+    }
 
     //EVENTS
     public void setEventsMap(){
@@ -175,10 +177,6 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
         dialog.setContentView(R.layout.custom_info_contents);
 
         imageView = (ImageView) dialog.findViewById(R.id.imageCamera);
-
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[] { android.Manifest.permission.CAMERA, android.Manifest.permission.WRITE_EXTERNAL_STORAGE }, 0);
-        }
 
         // set the custom dialog components - text, image and button
         final TextView description = (TextView) dialog.findViewById(R.id.description);
