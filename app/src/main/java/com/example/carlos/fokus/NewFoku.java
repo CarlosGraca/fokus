@@ -394,7 +394,7 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
     }
 
     public void saveFokus(final Marker marker){
-        String url = MapFunctions.apiUrl + "/spots";
+        final String url = MapFunctions.apiUrl + "/spots";
         mLong = String.valueOf(marker.getPosition().longitude);
         mLat = String.valueOf(marker.getPosition().latitude);
 
@@ -406,7 +406,24 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
 
             @Override
             public void onError(ANError anError) {
-                Log.d("response", String.valueOf(anError));
+                Log.d("URl",url);
+                Log.d("URl",mLong);
+                Log.d("URl",mLat);
+
+                if (anError.getErrorCode() != 0) {
+                    // received error from server
+                    // error.getErrorCode() - the error code from server
+                    // error.getErrorBody() - the error body from server
+                    // error.getErrorDetail() - just an error detail
+                    Log.d(TAG, "onError errorCode : " + anError.getErrorCode());
+                    Log.d(TAG, "onError errorBody : " + anError.getErrorBody());
+                    Log.d(TAG, "onError errorDetail : " + anError.getErrorDetail());
+                    // get parsed error object (If ApiError is your class)
+                    //ApiError apiError = anError.getErrorAsObject(ApiError.class);
+                } else {
+                    // error.getErrorDetail() : connectionError, parseError, requestCancelledError
+                    Log.d(TAG, "onError errorDetail : " + anError.getErrorDetail());
+                }
             }
         });
 

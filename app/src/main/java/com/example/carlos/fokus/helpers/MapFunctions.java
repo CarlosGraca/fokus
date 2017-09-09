@@ -14,7 +14,7 @@ public class MapFunctions {
 
     private static final String TAG = "MapFunctions";
 
-    public static String apiUrl = "http://pocteam2.gov.cv/public";
+    public static String apiUrl = "http://app.yournit.com";
 
 
     public MapFunctions() {

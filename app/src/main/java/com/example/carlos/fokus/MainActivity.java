@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         if (response.length() > 0) {
 
                             // loop through them all
-                            for (int i = 0; i <response.length(); i++) {
+                            for (int i = 0; i < response.length(); i++) {
 
                                 try {
 
