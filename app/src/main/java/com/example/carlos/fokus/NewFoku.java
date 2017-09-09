@@ -18,13 +18,12 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.example.carlos.fokus.constants.ApiUrls;
-import com.example.carlos.fokus.services.SaveFokusDetailsService;
+
+import com.example.carlos.fokus.constants.Constants;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.GeoDataClient;
@@ -44,8 +43,6 @@ import com.google.android.gms.tasks.Task;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import com.example.carlos.fokus.helpers.MapFunctions;
 
 
 public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
@@ -92,8 +89,6 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
             mLastKnownLocation = savedInstanceState.getParcelable(KEY_LOCATION);
             mCameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION);
         }*/
-
-
 
         setContentView(R.layout.activity_new_foku);
 
@@ -172,7 +167,8 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
 
         marker = mMarker;
 
-        final String url = ApiUrls.apiUrlPublic + "/spots";
+        final String url =  Constants.serverUrl+"/posts";
+
 
         final Dialog dialog = new Dialog(this);
 
@@ -217,26 +213,6 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
         });
 
         dialog.show();
-    }
-
-    public void infoWindow(){
-        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-            @Override
-            public View getInfoWindow(Marker marker) {
-                return null;
-            }
-
-            @Override
-            public View getInfoContents(Marker marker) {
-                // Inflate the layouts for the info window, title and snippet.
-                View infoWindow = getLayoutInflater().inflate(R.layout.custom_info_contents,
-                        (FrameLayout) findViewById(R.id.mapLocation), false);
-
-                TextView title = ((TextView) infoWindow.findViewById(R.id.description));
-                //title.setText(marker.getTitle());
-                return infoWindow;
-            }
-        });
     }
 
     private void getDeviceLocation() {
@@ -392,7 +368,8 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
     }
 
     public void saveFokus(final Marker marker){
-        String url = ApiUrls.apiUrlPublic + "/spots";
+        final String url =  Constants.serverUrl + "/spots";
+
         mLong = String.valueOf(marker.getPosition().longitude);
         mLat = String.valueOf(marker.getPosition().latitude);
 
@@ -404,7 +381,24 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
 
             @Override
             public void onError(ANError anError) {
-                Log.d("response", String.valueOf(anError));
+                Log.d("URl",url);
+                Log.d("URl",mLong);
+                Log.d("URl",mLat);
+
+                if (anError.getErrorCode() != 0) {
+                    // received error from server
+                    // error.getErrorCode() - the error code from server
+                    // error.getErrorBody() - the error body from server
+                    // error.getErrorDetail() - just an error detail
+                    Log.d(TAG, "onError errorCode : " + anError.getErrorCode());
+                    Log.d(TAG, "onError errorBody : " + anError.getErrorBody());
+                    Log.d(TAG, "onError errorDetail : " + anError.getErrorDetail());
+                    // get parsed error object (If ApiError is your class)
+                    //ApiError apiError = anError.getErrorAsObject(ApiError.class);
+                } else {
+                    // error.getErrorDetail() : connectionError, parseError, requestCancelledError
+                    Log.d(TAG, "onError errorDetail : " + anError.getErrorDetail());
+                }
             }
         });*/
 

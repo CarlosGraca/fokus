@@ -12,6 +12,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapFunctions {
 
+    private static final String TAG = "MapFunctions";
+
     public MapFunctions() {
     }
 
@@ -28,10 +30,6 @@ public class MapFunctions {
                 .icon(bitmapDescriptor));
     }
 
-    public void changeMarkerColor(GoogleMap map,
-                                  String type) {
 
-
-    }
 
 }

@@ -18,7 +18,7 @@
     <string name="action_about">Sobre</string>
     <string name="action_config">Definicoes</string>
     <string name="action_exit">Sair</string>
-    <string name="map_type">Tipo de mapa</string>
+    <string name="map_type">BaseMap</string>
     <string name="map_type_terain">Terreno</string>
     <string name="map_type_satelite">Satelite</string>
 

@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+
 import com.example.carlos.fokus.ui.DisplayUI;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -23,18 +24,14 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import com.example.carlos.fokus.constants.ApiUrls;
+import com.example.carlos.fokus.constants.Constants;
 import com.example.carlos.fokus.helpers.MapFunctions;
 
 public class MainActivity extends AppCompatActivity
         implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener  {
     private GoogleMap mMap;
-    //private RequestQueue requestQueue;
-    private String apiUrl = ApiUrls.apiUrlTest;
+    private String apiUrl = Constants.serverUrl+"/posts";
+
     private static final String TAG = "MainActivity";
     private String name;
     private String description;
@@ -45,7 +42,7 @@ public class MainActivity extends AppCompatActivity
     private static final CharSequence[] MAP_TYPE_ITEMS =
             {"Mapa de rua", "Hibrido", "Satellite", "Terreno"};
 
-    private DisplayUI ui = new DisplayUI(this.getApplicationContext());
+    private DisplayUI ui ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +53,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void initializeComponents () {
+
+        ui = new DisplayUI(this.getApplicationContext());
 
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
 
@@ -92,7 +91,7 @@ public class MainActivity extends AppCompatActivity
                         if (response.length() > 0) {
 
                             // loop through them all
-                            for (int i = 0; i <response.length(); i++) {
+                            for (int i = 0; i < response.length(); i++) {
 
                                 try {
 
@@ -152,32 +151,18 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        if (id == R.id.action_api_test) {
-            callApi();
-        }
-
         if (id == R.id.action_my_points) {
-            callApi();
+            Intent intent = new Intent(MainActivity.this, com.example.carlos.fokus.ListFokus.class);
+            startActivity(intent);
         }
-
         if (id == R.id.action_about) {
-            callApi();
+            return  true;
         }
-
         if (id == R.id.action_my_map_type) {
             showMapTypeSelectorDialog();
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -187,9 +172,9 @@ public class MainActivity extends AppCompatActivity
 
         LatLng currentLocation = new LatLng(14.9364475, -23.5067295);
 
-        mMarker = mMap.addMarker(new MarkerOptions().
+        /*mMarker = mMap.addMarker(new MarkerOptions().
                 position(currentLocation).
-                title("Marker in Sydney"));
+                title("Marker in Sydney"));*/
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 13));
 
