@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,23 +17,39 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.common.Priority;
+import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.JSONArrayRequestListener;
+import com.androidnetworking.interfaces.StringRequestListener;
+import com.example.carlos.fokus.model.Spot;
+import com.example.carlos.fokus.model.Spots;
+import com.example.carlos.fokus.services.GetListFokusService;
 import com.example.carlos.fokus.ui.DisplayUI;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.example.carlos.fokus.constants.Constants;
 import com.example.carlos.fokus.helpers.MapFunctions;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity
         implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener  {
     private GoogleMap mMap;
     private String apiUrl = Constants.serverUrl+"/posts";
 
-    private static final String TAG = "MainActivity";
+    private static final String TAG = MainActivity.class.getSimpleName();
     private String name;
     private String description;
 
@@ -73,39 +90,58 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        //requestQueue = Volley.newRequestQueue(this);
-
         callApi();
     }
 
+    public void testing (int value) {
+
+        if (value == 0) {
+            ui.showToast("0 e o valor setado");
+        } else {
+            ui.showToast("0 nao foi setado");
+        }
+    }
+
     private void callApi() {
-        // verify if there a response back do something with it
-        /*if (response.length() > 0) {
+        new GetListFokusService().call(Constants.serverUrl+"/spots", new JSONArrayRequestListener() {
 
-            // loop through them all
-            for (int i = 0; i < response.length(); i++) {
+            @Override
+            public void onResponse(JSONArray response) {
+                if (response.length() > 0) {
 
-                try {
+                    for (int i = 0; i < response.length(); i++) {
 
-                    JSONObject jsonObj = response.getJSONObject(i);
+                        JSONObject jsonObj = null;
+                        try {
+                            jsonObj = response.getJSONObject(i);
 
-                    int id = jsonObj.getInt("id");
-                    name = jsonObj.getString("name");
-                    double lat = jsonObj.getDouble("lat");
-                    double longit = jsonObj.getDouble("long");
+                            int id = jsonObj.getInt("id");
+                            name = jsonObj.getString("name");
+                            double lat = jsonObj.getDouble("lat");
+                            double longit = jsonObj.getDouble("long");
 
-                    LatLng currentLocation = new LatLng(lat, longit);
+                            LatLng currentLocation = new LatLng(lat, longit);
 
-                    MapFunctions.updateMarkers(
-                            mMap,
-                            name,
-                            //id,
-                            currentLocation,
-                            BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)
-                    );
+                            MapFunctions.updateMarkers(
+                                    mMap,
+                                    name,
+                                    id,
+                                    currentLocation,
+                                    BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)
+                            );
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
                 }
             }
-        }*/
+            @Override
+            public void onError(ANError anError) {
+
+            }
+        });
+
     }
 
     @Override
@@ -140,12 +176,11 @@ public class MainActivity extends AppCompatActivity
 
         /*mMarker = mMap.addMarker(new MarkerOptions().
                 position(currentLocation).
-                title("Marker in Sydney"));*/
+                title("Marker in Sydney")); */
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 13));
 
         mMap.setOnMarkerClickListener(this);
-
     }
 
     public void showDialogFokus(Marker marker){
@@ -164,6 +199,33 @@ public class MainActivity extends AppCompatActivity
 
         dialogButton.setVisibility(View.GONE);
         ratingBar.setEnabled(false);
+
+        String url = Constants.serverUrl+"/spots/"+ Math.round(marker.getZIndex());
+
+        new GetListFokusService().call(url, new JSONArrayRequestListener() {
+            @Override
+            public void onResponse(JSONArray response) {
+                ui.showToast("" + response.length());
+                /*JSONObject jsonObj = null;
+                try {
+                    jsonObj = response.getJSONObject(0);
+
+                    int id = jsonObj.getInt("id");
+                    name = jsonObj.getString("name");
+
+                    ui.showToast("" + name);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }*/
+
+
+            }
+
+            @Override
+            public void onError(ANError anError) {
+                ui.showLog("" + anError.getErrorDetail());
+            }
+        });
 
         dialog.show();
     }
@@ -213,7 +275,7 @@ public class MainActivity extends AppCompatActivity
 
     public boolean onMarkerClick(Marker marker) {
 
-        //showDialogFokus(marker);
+        showDialogFokus(marker);
 
         return true;
     }
