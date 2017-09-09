@@ -19,14 +19,14 @@ public class MapFunctions {
 
     public static void updateMarkers(GoogleMap map,
                                      String title,
-                                     int id,
+                                     //int id,
                                      LatLng latLng,
                                      BitmapDescriptor bitmapDescriptor) {
 
         map.addMarker(new MarkerOptions()
                 .position(latLng)
                 .title(title)
-                .zIndex(id)
+                //.zIndex(id)
                 .icon(bitmapDescriptor));
     }
 

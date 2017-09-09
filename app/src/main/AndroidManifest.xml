@@ -54,6 +54,18 @@
             </intent-filter>
         </activity>
 
+        <receiver
+            android:name=".AppInstallReceiver"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+                <action android:name="android.intent.action.PACKAGE_REPLACED" />
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
+
         <!-- A child of the main activity -->
         <activity
             android:name=".NewFoku"
@@ -81,6 +93,10 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDBUeVUGHBDr1xqVIsxVL_AiG2SLpKw-ng" />
 
+        <activity android:name=".Test">
+
+        </activity>
+
         <activity android:name=".ListFokus"
             android:parentActivityName=".MainActivity">
 
@@ -88,7 +104,6 @@
                    android:name="android.support.PARENT_ACTIVITY"
                    android:value="com.example.carlos.fokus.MainActivity" />
         </activity>
-
 
     </application>
 

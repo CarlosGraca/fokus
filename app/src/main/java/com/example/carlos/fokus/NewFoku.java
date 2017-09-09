@@ -18,16 +18,12 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.androidnetworking.error.ANError;
-import com.androidnetworking.interfaces.StringRequestListener;
 import com.example.carlos.fokus.constants.Constants;
-import com.example.carlos.fokus.services.SaveFokusDetailsService;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.GeoDataClient;
@@ -47,8 +43,6 @@ import com.google.android.gms.tasks.Task;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import com.example.carlos.fokus.helpers.MapFunctions;
 
 
 public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
@@ -176,6 +170,7 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
         marker = mMarker;
 
         final String url =  Constants.serverUrl+"/posts";
+
 
         final Dialog dialog = new Dialog(this);
 
@@ -372,10 +367,11 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
 
     public void saveFokus(final Marker marker){
         final String url =  Constants.serverUrl + "/spots";
+
         mLong = String.valueOf(marker.getPosition().longitude);
         mLat = String.valueOf(marker.getPosition().latitude);
 
-        new SaveFokusDetailsService().call(url, mLong, mLat, deviceID, mDescription, new StringRequestListener() {
+        /*new SaveFokusDetailsService().call(url, mLong, mLat, deviceID, mDescription, new StringRequestListener() {
             @Override
             public void onResponse(String response) {
                 Log.d("response", response);
@@ -402,7 +398,7 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
                     Log.d(TAG, "onError errorDetail : " + anError.getErrorDetail());
                 }
             }
-        });
+        });*/
 
     }
 }
