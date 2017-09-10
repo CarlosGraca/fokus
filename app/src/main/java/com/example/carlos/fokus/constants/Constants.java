@@ -5,5 +5,5 @@ package com.example.carlos.fokus.constants;
  */
 
 public class Constants {
-    public static final String serverUrl = "http://pocteam2.gov.cv/public";
+    public static final String serverUrl = "http://app.yournit.com";
 }
