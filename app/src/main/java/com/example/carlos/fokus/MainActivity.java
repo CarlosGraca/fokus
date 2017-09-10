@@ -23,6 +23,8 @@ import android.widget.TextView;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONArrayRequestListener;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
+import com.bumptech.glide.Glide;
+import com.example.carlos.fokus.helpers.ApiImage;
 import com.example.carlos.fokus.services.FokusServices;
 import com.example.carlos.fokus.ui.DisplayUI;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -49,16 +51,11 @@ import static com.example.carlos.fokus.helpers.MapFunctions.DEFAULT_ZOOM;
 import static com.example.carlos.fokus.helpers.MapFunctions.mDefaultLocation;
 
 public class MainActivity extends AppCompatActivity
-        implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener  {
+        implements OnMapReadyCallback {
     private GoogleMap mMap;
     private String apiUrl = Constants.serverUrl+"/posts";
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    private String name;
-    private String description;
-
-    // marker to setup click listener
-    private Marker mMarker;
 
     private static final CharSequence[] MAP_TYPE_ITEMS =
             {"Mapa de rua", "Hibrido", "Satellite", "Terreno"};
@@ -77,6 +74,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -125,47 +123,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void setFokusMap() {
-        new FokusServices().getArrayFokus(Constants.serverUrl+"/spots", new JSONArrayRequestListener() {
-
-            @Override
-            public void onResponse(JSONArray response) {
-                if (response.length() > 0) {
-
-                    for (int i = 0; i < response.length(); i++) {
-
-                        JSONObject jsonObj = null;
-                        try {
-                            jsonObj = response.getJSONObject(i);
-
-                            int id = jsonObj.getInt("id");
-                            name = jsonObj.getString("name");
-                            double lat = jsonObj.getDouble("lat");
-                            double longit = jsonObj.getDouble("long");
-
-                            LatLng currentLocation = new LatLng(lat, longit);
-
-                            MapFunctions.updateMarkers(
-                                    mMap,
-                                    name,
-                                    id,
-                                    currentLocation,
-                                    BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)
-                            );
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-                }
-            }
-            @Override
-            public void onError(ANError anError) {
-
-            }
-        });
-
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -219,15 +176,21 @@ public class MainActivity extends AppCompatActivity
             Log.e("Exception: %s", e.getMessage());
         }
 
-        mMap.setOnMarkerClickListener(this);
-
         setFokusMap();
+
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                showDialogFokus(marker);
+                return true;
+            }
+        });
     }
+
 
     public void showDialogFokus(Marker marker){
         final Dialog dialog = new Dialog(this);
-        String serverUrl = Constants.serverUrl;
-        Uri uri;
+        final String serverUrl = Constants.serverUrl;
 
         dialog.setContentView(R.layout.custom_info_contents);
 
@@ -243,25 +206,15 @@ public class MainActivity extends AppCompatActivity
         ratingBar.setEnabled(false);
         description.setEnabled(false);
 
-        String url = serverUrl+"/spots/"+ Math.round(marker.getZIndex());
-
-
-        new FokusServices().getFoku(url, new JSONObjectRequestListener() {
-            @Override
-            public void onResponse(JSONObject response) {
-                try {
-                    description.setText(response.getString("description"));
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onError(ANError anError) {
-                ui.showLog("" + anError.getErrorDetail());
-            }
-        });
+        // to retrieve the marker
+        JSONObject obj = (JSONObject) marker.getTag();// Type cast to your object type;
+        try {
+            description.setText(obj.getString("description"));
+            Glide.with(this).load(serverUrl+"/"+obj.getString("image")).into(imageView);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.d(TAG,e.getMessage());
+        }
 
         dialog.show();
     }
@@ -309,11 +262,39 @@ public class MainActivity extends AppCompatActivity
         fMapTypeDialog.show();
     }
 
-    public boolean onMarkerClick(Marker marker) {
 
-        showDialogFokus(marker);
 
-        return true;
+    private void setFokusMap() {
+        new FokusServices().getArrayFokus(Constants.serverUrl+"/spots", new JSONArrayRequestListener() {
+
+            @Override
+            public void onResponse(JSONArray response) {
+                if (response.length() > 0) {
+
+                    for (int i = 0; i < response.length(); i++) {
+
+                        JSONObject jsonObj;
+                        try {
+                            jsonObj = response.getJSONObject(i);
+
+                            LatLng currentLocation = new LatLng(jsonObj.getDouble("lat"), jsonObj.getDouble("long"));
+
+                            Marker mMarker = mMap.addMarker(new MarkerOptions().position(currentLocation).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
+                            // set object as tag
+                            mMarker.setTag(jsonObj);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+            @Override
+            public void onError(ANError anError) {
+                 Log.d(TAG,anError.getErrorDetail());
+            }
+        });
+
     }
 
 }

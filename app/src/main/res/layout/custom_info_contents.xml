@@ -20,7 +20,8 @@
             android:background="@null"
             android:scaleType="centerInside"
             android:src="@mipmap/m_camera"
-            app:srcCompat="@mipmap/m_camera" />
+            app:srcCompat="@mipmap/m_camera"
+            android:adjustViewBounds="true"/>
 
         <EditText
             android:id="@+id/description"
