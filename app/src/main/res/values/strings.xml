@@ -21,6 +21,9 @@
     <string name="map_type">BaseMap</string>
     <string name="map_type_terain">Terreno</string>
     <string name="map_type_satelite">Satelite</string>
+
     <string name="imagem">Imagem</string>
+
+    <string name="default_description">description</string>
 
 </resources>

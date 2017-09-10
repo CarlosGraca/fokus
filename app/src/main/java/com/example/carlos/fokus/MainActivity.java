@@ -22,10 +22,12 @@ import android.widget.TextView;
 
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONArrayRequestListener;
+
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.bumptech.glide.Glide;
 import com.example.carlos.fokus.helpers.ApiImage;
 import com.example.carlos.fokus.services.FokusServices;
+
 import com.example.carlos.fokus.ui.DisplayUI;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -39,9 +41,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.example.carlos.fokus.constants.Constants;
 import com.example.carlos.fokus.helpers.MapFunctions;
+
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -111,6 +115,7 @@ public class MainActivity extends AppCompatActivity
         });
 
     }
+
     /**
      * Saves the state of the map when the activity is paused.
      */
@@ -136,7 +141,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.action_my_points) {
-            Intent intent = new Intent(MainActivity.this, com.example.carlos.fokus.ListFokus.class);
+            Intent intent = new Intent(MainActivity.this, ListFokusActivity.class);
             startActivity(intent);
         }
         if (id == R.id.action_about) {

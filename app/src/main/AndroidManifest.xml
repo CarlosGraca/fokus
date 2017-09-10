@@ -61,12 +61,14 @@
 
         </activity>
 
-        <activity android:name=".ListFokus"
-            android:label="@string/app_name">
+        <activity android:name=".ListFokusActivity"
+            android:label="@string/app_name"
+            android:parentActivityName=".MainActivity">
         </activity>
 
         <activity android:name=".NewFoku"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:parentActivityName=".MainActivity">
 
         </activity>
 
@@ -98,8 +100,6 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDBUeVUGHBDr1xqVIsxVL_AiG2SLpKw-ng" />
-
-
 
     </application>
 
