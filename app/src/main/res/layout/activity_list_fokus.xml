@@ -4,7 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.carlos.fokus.ListFokus"
+    tools:context="com.example.carlos.fokus.ListFokusActivity"
     app:theme="@style/AppTheme.PopupOverlay">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/fokus_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="vertical">
+
+
+    </android.support.v7.widget.RecyclerView>
 
 </android.support.constraint.ConstraintLayout>

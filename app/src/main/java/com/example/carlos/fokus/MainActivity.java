@@ -8,7 +8,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,28 +16,19 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import com.androidnetworking.AndroidNetworking;
-import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONArrayRequestListener;
-import com.androidnetworking.interfaces.StringRequestListener;
-import com.example.carlos.fokus.model.Spot;
-import com.example.carlos.fokus.model.Spots;
 import com.example.carlos.fokus.services.GetListFokusService;
 import com.example.carlos.fokus.ui.DisplayUI;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.example.carlos.fokus.constants.Constants;
 import com.example.carlos.fokus.helpers.MapFunctions;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -91,15 +81,6 @@ public class MainActivity extends AppCompatActivity
         });
 
         callApi();
-    }
-
-    public void testing (int value) {
-
-        if (value == 0) {
-            ui.showToast("0 e o valor setado");
-        } else {
-            ui.showToast("0 nao foi setado");
-        }
     }
 
     private void callApi() {
@@ -156,7 +137,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.action_my_points) {
-            Intent intent = new Intent(MainActivity.this, com.example.carlos.fokus.ListFokus.class);
+            Intent intent = new Intent(MainActivity.this, ListFokusActivity.class);
             startActivity(intent);
         }
         if (id == R.id.action_about) {

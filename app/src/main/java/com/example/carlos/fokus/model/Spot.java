@@ -1,7 +1,8 @@
 package com.example.carlos.fokus.model;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import android.view.View;
+
+import eu.davidea.flexibleadapter.FlexibleAdapter;
 
 /**
  * Created by eceybrito on 09/09/2017.
@@ -9,39 +10,34 @@ import com.google.gson.annotations.SerializedName;
 
 public class Spot {
 
-    @SerializedName("id")
-    @Expose
     private Integer id;
-    @SerializedName("name")
-    @Expose
     private String name;
-    @SerializedName("lat")
-    @Expose
-    private Integer lat;
-    @SerializedName("long")
-    @Expose
-    private Integer _long;
-    @SerializedName("user_id")
-    @Expose
-    private Object userId;
-    @SerializedName("deleted_at")
-    @Expose
-    private Object deletedAt;
-    @SerializedName("created_at")
-    @Expose
+    private double lat;
+    private double longit;
+    private int userId;
+    private String deletedAt;
     private String createdAt;
-    @SerializedName("updated_at")
-    @Expose
     private String updatedAt;
-    @SerializedName("description")
-    @Expose
     private String description;
-    @SerializedName("image")
-    @Expose
-    private Object image;
-    @SerializedName("device_id")
-    @Expose
+    private String image;
     private String deviceId;
+
+    public Spot(Integer id, String name, double lat, double longit,
+                int userId, String deletedAt, String createdAt,
+                String updatedAt, String description,
+                String image, String deviceId) {
+        this.id = id;
+        this.name = name;
+        this.lat = lat;
+        this.longit = longit;
+        this.userId = userId;
+        this.deletedAt = deletedAt;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.description = description;
+        this.image = image;
+        this.deviceId = deviceId;
+    }
 
     public Integer getId() {
         return id;
@@ -59,7 +55,7 @@ public class Spot {
         this.name = name;
     }
 
-    public Integer getLat() {
+    public Double getLat() {
         return lat;
     }
 
@@ -67,19 +63,19 @@ public class Spot {
         this.lat = lat;
     }
 
-    public Integer getLong() {
-        return _long;
+    public Double getLong() {
+        return longit;
     }
 
     public void setLong(Integer _long) {
-        this._long = _long;
+        this.longit = _long;
     }
 
     public Object getUserId() {
         return userId;
     }
 
-    public void setUserId(Object userId) {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 
@@ -87,7 +83,7 @@ public class Spot {
         return deletedAt;
     }
 
-    public void setDeletedAt(Object deletedAt) {
+    public void setDeletedAt(String deletedAt) {
         this.deletedAt = deletedAt;
     }
 
@@ -119,7 +115,7 @@ public class Spot {
         return image;
     }
 
-    public void setImage(Object image) {
+    public void setImage(String image) {
         this.image = image;
     }
 
@@ -131,4 +127,48 @@ public class Spot {
         this.deviceId = deviceId;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Spot spot = (Spot) o;
+
+        if (Double.compare(spot.lat, lat) != 0) return false;
+        if (Double.compare(spot.longit, longit) != 0) return false;
+        if (userId != spot.userId) return false;
+        if (id != null ? !id.equals(spot.id) : spot.id != null) return false;
+        if (name != null ? !name.equals(spot.name) : spot.name != null) return false;
+        if (deletedAt != null ? !deletedAt.equals(spot.deletedAt) : spot.deletedAt != null)
+            return false;
+        if (createdAt != null ? !createdAt.equals(spot.createdAt) : spot.createdAt != null)
+            return false;
+        if (updatedAt != null ? !updatedAt.equals(spot.updatedAt) : spot.updatedAt != null)
+            return false;
+        if (description != null ? !description.equals(spot.description) : spot.description != null)
+            return false;
+        if (image != null ? !image.equals(spot.image) : spot.image != null) return false;
+        return deviceId != null ? deviceId.equals(spot.deviceId) : spot.deviceId == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        temp = Double.doubleToLongBits(lat);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(longit);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + userId;
+        result = 31 * result + (deletedAt != null ? deletedAt.hashCode() : 0);
+        result = 31 * result + (createdAt != null ? createdAt.hashCode() : 0);
+        result = 31 * result + (updatedAt != null ? updatedAt.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (image != null ? image.hashCode() : 0);
+        result = 31 * result + (deviceId != null ? deviceId.hashCode() : 0);
+        return result;
+    }
 }

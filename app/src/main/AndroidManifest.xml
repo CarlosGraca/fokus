@@ -97,7 +97,7 @@
 
         </activity>
 
-        <activity android:name=".ListFokus"
+        <activity android:name=".ListFokusActivity"
             android:parentActivityName=".MainActivity">
 
             <meta-data

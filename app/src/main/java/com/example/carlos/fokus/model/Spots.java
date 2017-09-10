@@ -1,8 +1,5 @@
 package com.example.carlos.fokus.model;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
-
 import java.util.List;
 
 /**
@@ -11,8 +8,6 @@ import java.util.List;
 
 public class Spots {
 
-    @SerializedName("spot")
-    @Expose
     private List<Spot> spot = null;
 
     public List<Spot> getSpot() {
