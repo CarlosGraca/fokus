@@ -4,6 +4,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.androidnetworking.error.ANError;
@@ -25,7 +27,7 @@ import eu.davidea.flexibleadapter.FlexibleAdapter;
 public class ListFokusActivity extends AppCompatActivity {
 
     private RecyclerView fokusRecycler;
-    private RecyclerView.Adapter fokusAdapter;
+    private DefaultSpotAdapter fokusAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private List<Spot> listFoku = new ArrayList<>();
 
@@ -49,14 +51,16 @@ public class ListFokusActivity extends AppCompatActivity {
 
         mLayoutManager = new LinearLayoutManager(this);
 
-        mLayoutManager = new LinearLayoutManager(this);
         fokusRecycler.setLayoutManager(mLayoutManager);
+        //fokusRecycler.setVisibility(View.VISIBLE);
+
+        listFoku = getFokusList();
 
         // specify an adapter (see also next example)
         fokusAdapter = new DefaultSpotAdapter(listFoku);
         fokusRecycler.setAdapter(fokusAdapter);
 
-        listFoku = getFokusList();
+        //Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
 
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -77,7 +81,7 @@ public class ListFokusActivity extends AppCompatActivity {
                             jsonObj = response.getJSONObject(i);
 
                             int id = jsonObj.getInt("id");
-                            int userId = jsonObj.getInt("user_id");
+                            //int userId = jsonObj.getInt("user_id");
                             String name = jsonObj.getString("name");              // to be in
                             String created_at = jsonObj.getString("created_at");  // to be in
                             String deleted_at = jsonObj.getString("created_at");
@@ -89,9 +93,14 @@ public class ListFokusActivity extends AppCompatActivity {
                             String device_id = jsonObj.getString("device_id");
 
                             // add fields to list
-                            listFok.add(new Spot(id, name, lat, longit, userId, deleted_at,
-                                    created_at, updated_at, description, image, device_id));
+                            /*listFok.add(new Spot(id, name, lat, longit, userId, deleted_at,
+                                    created_at, updated_at, description, image, device_id)); */
 
+                            listFok.add(new Spot(id, name, created_at, description, image));
+
+                            Toast.makeText(ListFokusActivity.this, "" + name, Toast.LENGTH_SHORT).show();
+
+                            Log.d("name", "name");
 
                         } catch (JSONException e) {
                             e.printStackTrace();

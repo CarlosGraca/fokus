@@ -8,7 +8,8 @@
     app:cardElevation="@dimen/cardview_default_elevation"
     app:cardUseCompatPadding="true"
     app:cardMaxElevation="@dimen/cardview_default_elevation"
-    app:cardPreventCornerOverlap="true">
+    app:cardPreventCornerOverlap="true"
+    android:background="#000">
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -20,7 +21,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:text="Medium Text"
             android:contentDescription="@string/default_description"
             android:layout_alignParentTop="true"
             android:src="@drawable/android_icon"
@@ -32,10 +32,11 @@
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Medium Text"
+            android:text="@string/nameFoku"
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
-            android:layout_below="@+id/imageFoku"/>
+            android:layout_below="@+id/imageFoku"
+            android:textColor="#000"/>
 
         <TextView
             android:id="@+id/createdAtFoku"
@@ -43,10 +44,11 @@
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Medium Text"
+            android:text="@string/createdAtFoku"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_below="@id/nameFoku"/>
+            android:layout_below="@id/nameFoku"
+            android:textColor="#000"/>
 
         <TextView
             android:id="@+id/descriptionFoku"
@@ -54,10 +56,11 @@
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Medium Text"
+            android:text="@string/descriptionFoku"
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
-            android:layout_below="@id/nameFoku"/>
+            android:layout_below="@id/nameFoku"
+            android:textColor="#000"/>
 
     </RelativeLayout>
 

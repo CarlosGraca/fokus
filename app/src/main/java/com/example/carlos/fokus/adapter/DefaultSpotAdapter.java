@@ -6,10 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.example.carlos.fokus.R;
 import com.example.carlos.fokus.model.Spot;
-import com.example.carlos.fokus.model.Spots;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +18,7 @@ import java.util.List;
 
 public class DefaultSpotAdapter extends RecyclerView.Adapter<DefaultSpotAdapter.ViewHolder> {
 
-    private List<Spot> spots = new ArrayList<>();
+    private List<Spot> spots;
 
     public DefaultSpotAdapter(List<Spot> mSpots) {
        spots = mSpots;
@@ -65,7 +63,6 @@ public class DefaultSpotAdapter extends RecyclerView.Adapter<DefaultSpotAdapter.
         public TextView descriptionFoku;
         public ImageView imageFoku;
 
-        public TextView mTextView;
         public ViewHolder(View v) {
             super(v);
             nameFoku = (TextView) v.findViewById(R.id.nameFoku);
