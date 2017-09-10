@@ -31,7 +31,8 @@
             android:inputType="textMultiLine"
             android:lines="2"
             android:layout_margin="2dp"
-            android:layout_marginTop="8dp"/>
+            android:layout_marginTop="8dp"
+            />
 
         <TextView
             android:id="@+id/lblRateMe"
@@ -39,7 +40,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="2dp"
             android:text="@string/m_rating"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            />
 
         <RatingBar
             android:id="@+id/ratingBar"
@@ -50,15 +52,37 @@
             android:stepSize="1.0"
             android:rating="0.0" />
 
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@+id/linearLayout1">
+
+        <Button
+            android:id="@+id/btFoto"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:background="@color/colorPrimaryDark"
+            android:text="@string/imagem"
+            android:textColor="#ffffff" />
         <Button
             android:id="@+id/btSend"
-            android:textColor="#ffffff"
-            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:layout_marginTop="5dp"
             android:background="@color/colorPrimaryDark"
             android:text="@string/send"
-            android:layout_margin="2dp"
-            android:layout_marginTop="5dp"/>
+            android:textColor="#ffffff" />
+
     </LinearLayout>
 
 
