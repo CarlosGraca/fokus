@@ -2,10 +2,9 @@ package com.example.carlos.fokus;
 
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -29,6 +28,7 @@ import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.example.carlos.fokus.constants.Constants;
 import com.example.carlos.fokus.helpers.ApiImage;
+import com.example.carlos.fokus.helpers.MapFunctions;
 import com.example.carlos.fokus.services.FokusServices;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -90,10 +90,6 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
     private static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE = 100;
     private static final String IMAGE_DIRECTORY_NAME = "Fokus";
 
-    private Uri fileUri;
-    static File mediaFile;
-
-
     String deviceID;
     String mDescription;
     String mRating;
@@ -101,6 +97,7 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
     String mLat;
     String mLong;
 
+    private Context context;
 
 
 
@@ -214,6 +211,10 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
                 mRating = String.valueOf(rating);
             }
         });
+
+        // to retrieve the marker
+        String obj = (String) marker.getTag();// Type cast to your object type;
+        Toast.makeText(this.getApplicationContext(),obj,Toast.LENGTH_SHORT).show();
 
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -363,6 +364,9 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
     public void costumerMarker(LatLng latLng, String title, String snippet){
         marker = mMap.addMarker(new MarkerOptions().position(latLng)
                 .draggable(true));
+
+        String adrress = MapFunctions.getAddress(this.getApplicationContext(), latLng.latitude, latLng.longitude);
+        marker.setTag(adrress);
     }
 
     public void takePicture() {

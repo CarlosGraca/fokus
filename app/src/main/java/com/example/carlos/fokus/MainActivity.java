@@ -1,13 +1,16 @@
 package com.example.carlos.fokus;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -57,14 +60,14 @@ import static com.example.carlos.fokus.helpers.MapFunctions.mDefaultLocation;
 public class MainActivity extends AppCompatActivity
         implements OnMapReadyCallback {
     private GoogleMap mMap;
-    private String apiUrl = Constants.serverUrl+"/posts";
+    private String apiUrl = Constants.serverUrl + "/posts";
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private static final CharSequence[] MAP_TYPE_ITEMS =
             {"Mapa de rua", "Hibrido", "Satellite", "Terreno"};
 
-    private DisplayUI ui ;
+    private DisplayUI ui;
 
     private static final String KEY_CAMERA_POSITION = "camera_position";
     private static final String KEY_LOCATION = "location";
@@ -75,6 +78,9 @@ public class MainActivity extends AppCompatActivity
     private Location mLastKnownLocation;
 
     private FusedLocationProviderClient mFusedLocationProviderClient;
+
+    private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +99,7 @@ public class MainActivity extends AppCompatActivity
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
     }
 
-    public void initializeComponents () {
+    public void initializeComponents() {
 
         ui = new DisplayUI(this.getApplicationContext());
 
@@ -145,7 +151,7 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
         }
         if (id == R.id.action_about) {
-            return  true;
+            return true;
         }
         if (id == R.id.action_my_map_type) {
             showMapTypeSelectorDialog();
@@ -153,33 +159,55 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Handles the result of the request for location permissions.
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String permissions[],
+                                           @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                }
+            }
+        }
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        if (MapFunctions.getLocationPermission(this)) {
+            try {
+                Task<Location> locationResult = mFusedLocationProviderClient.getLastLocation();
+                locationResult.addOnCompleteListener(this, new OnCompleteListener<Location>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Location> task) {
+                        if (task.isSuccessful() && task.getResult() != null) {
+                            // Set the map's camera position to the current location of the device.
+                            mLastKnownLocation = task.getResult();
 
-        try {
-            Task<Location> locationResult = mFusedLocationProviderClient.getLastLocation();
-            locationResult.addOnCompleteListener(this, new OnCompleteListener<Location>() {
-                @Override
-                public void onComplete(@NonNull Task<Location> task) {
-                    if (task.isSuccessful() && task.getResult() != null) {
-                        // Set the map's camera position to the current location of the device.
-                        mLastKnownLocation = task.getResult();
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLastKnownLocation.getLatitude(),
+                                    mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
 
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLastKnownLocation.getLatitude(),
-                                mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
+                           // mMap.setMyLocationEnabled(true);
+                            mMap.getUiSettings().setMyLocationButtonEnabled(true);
 
-                    } else {
-                        Log.d(TAG, "Current location is null. Using defaults.");
-                        Log.e(TAG, "Exception: %s", task.getException());
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
-                        mMap.getUiSettings().setMyLocationButtonEnabled(false);
-                    }
-                }
-            });
-        } catch(SecurityException e)  {
-            Log.e("Exception: %s", e.getMessage());
-        }
+                       } else {
+                           Log.d(TAG, "Current location is null. Using defaults.");
+                           Log.e(TAG, "Exception: %s", task.getException());
+                           mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
+                           mMap.getUiSettings().setMyLocationButtonEnabled(false);
+                       }
+                   }
+               });
+           } catch (SecurityException e) {
+               Log.e("Exception: %s", e.getMessage());
+           }
+       }
 
         setFokusMap();
 
