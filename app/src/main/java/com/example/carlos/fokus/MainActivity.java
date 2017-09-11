@@ -298,6 +298,7 @@ public class MainActivity extends AppCompatActivity
 
 
     private void setFokusMap() {
+        //final  float bitDesc;
         new FokusServices().getArrayFokus(Constants.serverUrl+"/spots", new JSONArrayRequestListener() {
 
             @Override
@@ -311,8 +312,20 @@ public class MainActivity extends AppCompatActivity
                             jsonObj = response.getJSONObject(i);
 
                             LatLng currentLocation = new LatLng(jsonObj.getDouble("lat"), jsonObj.getDouble("long"));
-
-                            Marker mMarker = mMap.addMarker(new MarkerOptions().position(currentLocation).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
+                            float bitDesc = 0;
+                            Log.d("bitDesc 11", jsonObj.getString("status"));
+                            if (jsonObj.getString("status").equals(Constants.marked)) {
+                                 bitDesc = BitmapDescriptorFactory.HUE_ORANGE;
+                                Log.d("bitDesc 1", String.valueOf(bitDesc));
+                            }else if (jsonObj.getString("status").equals(Constants.confirmed)) {
+                                bitDesc = BitmapDescriptorFactory.HUE_RED;
+                                Log.d("bitDesc 2", String.valueOf(bitDesc));
+                            }else if (jsonObj.getString("status").equals(Constants.sorted_out)) {
+                                bitDesc = BitmapDescriptorFactory.HUE_GREEN;
+                                Log.d("bitDesc 3", String.valueOf(bitDesc));
+                            }
+                            Log.d("bitDesc ", String.valueOf(bitDesc));
+                            Marker mMarker = mMap.addMarker(new MarkerOptions().position(currentLocation).icon(BitmapDescriptorFactory.defaultMarker(bitDesc)));
                             // set object as tag
                             mMarker.setTag(jsonObj);
 

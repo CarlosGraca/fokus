@@ -49,19 +49,14 @@ public class MapFunctions {
 
     public static String getAddress(Context context, double lat, double lng) {
         Geocoder geocoder = new Geocoder(context, Locale.getDefault());
+
         try {
-            List<android.location.Address> addresses = geocoder.getFromLocation(lat, lng, 1);
+            List<android.location.Address> addresses = geocoder.getFromLocation(lat, lng, 2);
 
-            android.location.Address obj = addresses.get(0);
-
-            String add = obj.getAddressLine(0);
-            add = add + "\n" + obj.getCountryName();
-            add = add + "\n" + obj.getCountryCode();
-            add = add + "\n" + obj.getAdminArea();
-            add = add + "\n" + obj.getPostalCode();
-            add = add + "\n" + obj.getSubAdminArea();
-            add = add + "\n" + obj.getLocality();
-            add = add + "\n" + obj.getSubThoroughfare();
+                android.location.Address obj = addresses.get(1);
+                Log.d("MAD "+1, String.valueOf(obj));
+                String  add = obj.getAddressLine(0);
+                Log.d("MAD ", String.valueOf(add));
 
             return add;
         } catch (IOException e) {

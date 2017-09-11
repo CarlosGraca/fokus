@@ -22,9 +22,9 @@ public class FokusServices implements IFokusServices {
     }
 
     @Override
-    public void saveFoku(String url, String mLong, String mLat, String  deviceID, String mDescription , File image_foku, String rating, JSONObjectRequestListener listener) {
+    public void saveFoku(String url,String nName, String mLong, String mLat, String  deviceID, String mDescription , File image_foku, String rating, JSONObjectRequestListener listener) {
         AndroidNetworking.upload(url)
-                .addMultipartParameter("name", "Praia")
+                .addMultipartParameter("name", nName)
                 .addMultipartParameter("long", mLong)
                 .addMultipartParameter("lat", mLat)
                 .addMultipartParameter("description", mDescription)
