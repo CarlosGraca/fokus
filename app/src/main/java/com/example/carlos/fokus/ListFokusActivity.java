@@ -68,7 +68,7 @@ public class ListFokusActivity extends AppCompatActivity {
                             spot.setDescription(jsonObj.getString("description"));
                             spot.setImage(jsonObj.getString("image"));
 
-                            Toast.makeText(ListFokusActivity.this, listFok.get(0).getName() + listFok.get(1).getName(), Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(ListFokusActivity.this, listFok.get(0).getName() + listFok.get(1).getName(), Toast.LENGTH_SHORT).show();
 
                             Log.d("name", listFok.get(0).getName());
 
