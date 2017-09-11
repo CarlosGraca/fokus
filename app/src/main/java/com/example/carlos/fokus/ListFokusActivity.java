@@ -148,11 +148,19 @@ public class ListFokusActivity extends AppCompatActivity
 
             String deviceID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
+            listFok.clear();
+
             getFokusList(Constants.serverUrl + "/spots?device_id=" + deviceID);
+
+            fokusAdapter.notifyDataSetChanged();
 
         } else {
 
+            listFok.clear();
+
             getFokusList(Constants.serverUrl + "/spots");
+
+            fokusAdapter.notifyDataSetChanged();
         }
     }
 }
