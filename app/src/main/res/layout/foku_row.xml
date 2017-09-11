@@ -5,33 +5,32 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardBackgroundColor="@color/cardview_light_background"
     app:cardCornerRadius="5dp"
-    android:layout_margin="2dp">
+    android:layout_margin="5dp">
 
     <ImageView
         android:id="@+id/imageFoku"
         android:scaleType="centerCrop"
-        android:layout_width="80sp"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:contentDescription="@string/default_description"
         android:src="@drawable/android_icon"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:padding="2dp"/>
+        android:layout_margin="2dp"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="70dp"
-        android:layout_marginStart="70dp"
+        android:layout_marginLeft="100dp"
+        android:layout_marginStart="100dp"
         android:orientation="horizontal">
 
         <RelativeLayout
             android:id="@+id/rlFields"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:orientation="vertical">
+            android:layout_marginLeft="10dp">
 
             <TextView
                 android:id="@+id/nameFoku"
@@ -39,9 +38,9 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:padding="5dp"
+                android:paddingBottom="2dp"
                 android:text="@string/nameFoku"
-                android:textSize="10dp"
+                android:textSize="12dp"
                 android:textColor="#808184" />
 
             <TextView
@@ -51,7 +50,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_below="@id/nameFoku"
-                android:padding="5dp"
+                android:paddingBottom="2dp"
                 android:text="@string/descriptionFoku"
                 android:textSize="15dp"
                 android:textColor="#808184" />
@@ -63,9 +62,9 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_below="@id/descriptionFoku"
-                android:padding="5dp"
+                android:paddingBottom="2dp"
                 android:text="@string/createdAtFoku"
-                android:textSize="10dp"
+                android:textSize="12dp"
                 android:textColor="#808184" />
 
         </RelativeLayout>

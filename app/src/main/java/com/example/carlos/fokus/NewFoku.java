@@ -19,6 +19,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -199,7 +200,8 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
         image_foku = null;
 
         // set the custom dialog components - text, image and button
-        final TextView description = (TextView) dialog.findViewById(R.id.description);
+        final EditText description = (EditText) dialog.findViewById(R.id.description);
+        final TextView location = (TextView) dialog.findViewById(R.id.location);
 
         Button dialogButton = (Button) dialog.findViewById(R.id.btSend);
 
@@ -214,6 +216,8 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
 
         // to retrieve the marker
         mName = (String) marker.getTag();// Type cast to your object type;
+
+        location.setText(mName);
 
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
