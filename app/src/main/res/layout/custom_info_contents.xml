@@ -11,6 +11,14 @@
         android:orientation="vertical"
         android:weightSum="1">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textSize="15dp"
+            android:id="@+id/location"/>
+
         <ImageView
             android:id="@+id/imgFoku"
             android:layout_width="match_parent"

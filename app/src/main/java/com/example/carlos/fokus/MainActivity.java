@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -230,7 +231,8 @@ public class MainActivity extends AppCompatActivity
         final ImageView imageView = (ImageView) dialog.findViewById(R.id.imgFoku);
 
         // set the custom dialog components - text, image and button
-        final TextView description = (TextView) dialog.findViewById(R.id.description);
+        final EditText description = (EditText) dialog.findViewById(R.id.description);
+        final TextView location = (TextView) dialog.findViewById(R.id.location);
 
         Button dialogButton = (Button) dialog.findViewById(R.id.btSend);
         RatingBar ratingBar = (RatingBar) dialog.findViewById(R.id.ratingBar);
@@ -243,6 +245,8 @@ public class MainActivity extends AppCompatActivity
         JSONObject obj = (JSONObject) marker.getTag();// Type cast to your object type;
         try {
             description.setText(obj.getString("description"));
+            location.setText(obj.getString("name"));
+            ratingBar.setRating(obj.getInt("rating"));
             Glide.with(this).load(serverUrl+"/"+obj.getString("image")).into(imageView);
         } catch (Exception e) {
             e.printStackTrace();
