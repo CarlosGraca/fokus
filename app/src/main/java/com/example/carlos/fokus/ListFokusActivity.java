@@ -1,9 +1,20 @@
 package com.example.carlos.fokus;
 
+import android.provider.ContactsContract;
+import android.provider.Settings;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.androidnetworking.error.ANError;
@@ -20,84 +31,84 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListFokusActivity extends AppCompatActivity {
+public class ListFokusActivity extends AppCompatActivity
+    implements CompoundButton.OnCheckedChangeListener{
 
     private RecyclerView fokusRecycler;
-    private RecyclerView.Adapter fokusAdapter;
+    private DefaultSpotAdapter fokusAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private List<Spot> listFoku = new ArrayList<>();
 
-    //DisplayUI ui = new DisplayUI(this.getApplicationContext());
+    private List<Spot> listFok = new ArrayList<>();
+
+    private Switch switchMyFokusOnly;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_fokus);
 
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         initializeComponents();
+
+        getFokusList(Constants.serverUrl + "/spots");
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_list_fokus, menu);
+        MenuItem search = menu.findItem(R.id.search);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(search);
+        search(searchView);
+
+        return super.onCreateOptionsMenu(menu);
     }
 
     private void initializeComponents() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarListFokus);
+        setSupportActionBar(toolbar);
 
-        Toast.makeText(this, "List of fokus", Toast.LENGTH_SHORT).show();
-
-        fokusRecycler = (RecyclerView) findViewById(R.id.fokus_recycler);
-
-        fokusRecycler.setHasFixedSize(true);
-
-        mLayoutManager = new LinearLayoutManager(this);
-
-        mLayoutManager = new LinearLayoutManager(this);
-        fokusRecycler.setLayoutManager(mLayoutManager);
-
-        // specify an adapter (see also next example)
-        fokusAdapter = new DefaultSpotAdapter(listFoku);
-        fokusRecycler.setAdapter(fokusAdapter);
-
-        listFoku = getFokusList();
-
+        switchMyFokusOnly = (Switch) findViewById(R.id.switch_top);
+        switchMyFokusOnly.setOnCheckedChangeListener(this);
 
     }
 
-    private List<Spot> getFokusList() {
+    private void getFokusList(String url) {
 
-        final List<Spot> listFok = new ArrayList<>();
-
-        new FokusServices().getArrayFokus(Constants.serverUrl + "/spots", new JSONArrayRequestListener() {
+        new FokusServices().getArrayFokus(url, new JSONArrayRequestListener() {
             @Override
             public void onResponse(JSONArray response) {
                 if (response.length() > 0) {
 
                     for (int i = 0; i < response.length(); i++) {
 
+                        Spot spot = new Spot();
+
                         JSONObject jsonObj = null;
+
                         try {
+
                             jsonObj = response.getJSONObject(i);
 
-                            int id = jsonObj.getInt("id");
-                            int userId = jsonObj.getInt("user_id");
-                            String name = jsonObj.getString("name");              // to be in
-                            String created_at = jsonObj.getString("created_at");  // to be in
-                            String deleted_at = jsonObj.getString("created_at");
-                            String updated_at = jsonObj.getString("updated_at");
-                            String description = jsonObj.getString("description"); // to be in
-                            String image = jsonObj.getString("image");             // to be in
-                            double lat = jsonObj.getDouble("lat");
-                            double longit = jsonObj.getDouble("long");
-                            String device_id = jsonObj.getString("device_id");
-
-                            // add fields to list
-                            listFok.add(new Spot(id, name, lat, longit, userId, deleted_at,
-                                    created_at, updated_at, description, image, device_id));
-
+                            spot.setName(jsonObj.getString("name"));
+                            spot.setCreatedAt(jsonObj.getString("created_at"));
+                            spot.setDescription(jsonObj.getString("description"));
+                            spot.setImage(jsonObj.getString("image"));
 
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
 
+                        listFok.add(spot);
+
                     }
+                    // specify an adapter (see also next example)
+                    fokusRecycler = (RecyclerView) findViewById(R.id.fokus_recycler);
+                    fokusRecycler.setHasFixedSize(true);
+                    fokusAdapter = new DefaultSpotAdapter(getApplicationContext(),listFok);
+                    fokusRecycler.setAdapter(fokusAdapter);
+                    mLayoutManager = new LinearLayoutManager(ListFokusActivity.this);
+                    fokusRecycler.setLayoutManager(mLayoutManager);
+                    fokusRecycler.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -107,7 +118,49 @@ public class ListFokusActivity extends AppCompatActivity {
                 Toast.makeText(ListFokusActivity.this, "" + anError.getErrorDetail(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+    private void search(SearchView searchView) {
 
-        return listFok;
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+                if (query == null || query.length() < 0) {
+
+                    Toast.makeText(ListFokusActivity.this, "Nenhum foku", Toast.LENGTH_SHORT).show();
+                }
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+                fokusAdapter.getFilter().filter(newText);
+                return true;
+            }
+        });
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if (isChecked) {
+
+            String deviceID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+
+            listFok.clear();
+
+            getFokusList(Constants.serverUrl + "/spots?device_id=" + deviceID);
+
+            fokusAdapter.notifyDataSetChanged();
+
+        } else {
+
+            listFok.clear();
+
+            getFokusList(Constants.serverUrl + "/spots");
+
+            fokusAdapter.notifyDataSetChanged();
+        }
     }
 }

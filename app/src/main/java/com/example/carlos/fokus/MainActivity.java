@@ -299,8 +299,6 @@ public class MainActivity extends AppCompatActivity
         fMapTypeDialog.show();
     }
 
-
-
     private void setFokusMap() {
         //final  float bitDesc;
         new FokusServices().getArrayFokus(Constants.serverUrl+"/spots", new JSONArrayRequestListener() {

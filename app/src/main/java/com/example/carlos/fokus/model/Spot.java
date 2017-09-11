@@ -22,6 +22,9 @@ public class Spot {
     private String image;
     private String deviceId;
 
+    public Spot() {
+    }
+
     public Spot(Integer id, String name, double lat, double longit,
                 int userId, String deletedAt, String createdAt,
                 String updatedAt, String description,
@@ -37,6 +40,15 @@ public class Spot {
         this.description = description;
         this.image = image;
         this.deviceId = deviceId;
+    }
+
+    public Spot(Integer id, String name, String createdAt, String description,
+                String image) {
+        this.id = id;
+        this.name = name;
+        this.createdAt = createdAt;
+        this.description = description;
+        this.image = image;
     }
 
     public Integer getId() {
