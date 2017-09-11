@@ -6,6 +6,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -14,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.Toast;
 
@@ -32,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ListFokusActivity extends AppCompatActivity
-    implements CompoundButton.OnCheckedChangeListener{
+    implements CompoundButton.OnCheckedChangeListener {
 
     private RecyclerView fokusRecycler;
     private DefaultSpotAdapter fokusAdapter;
@@ -70,6 +72,7 @@ public class ListFokusActivity extends AppCompatActivity
         switchMyFokusOnly = (Switch) findViewById(R.id.switch_top);
         switchMyFokusOnly.setOnCheckedChangeListener(this);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void getFokusList(String url) {

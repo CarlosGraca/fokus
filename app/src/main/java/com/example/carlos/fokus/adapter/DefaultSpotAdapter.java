@@ -1,14 +1,18 @@
 package com.example.carlos.fokus.adapter;
 
 import android.content.Context;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -49,7 +53,7 @@ public class DefaultSpotAdapter extends RecyclerView.Adapter<DefaultSpotAdapter.
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
 
         Spot spot = spots.get(position);
 
@@ -67,6 +71,35 @@ public class DefaultSpotAdapter extends RecyclerView.Adapter<DefaultSpotAdapter.
                 .override(600, 200)
                 .centerCrop()
                 .into(imageFoku);
+
+        // setup popup listener
+        holder.ibMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                //creating a popup menu
+                PopupMenu popup = new PopupMenu(ctx, holder.ibMore);
+                //inflating menu from xml resource
+                popup.inflate(R.menu.popup_menu_card);
+                //adding click listener
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.one:
+                                Toast.makeText(ctx, item.getTitle(), Toast.LENGTH_SHORT).show();
+                                break;
+                            case R.id.two:
+                                Toast.makeText(ctx, item.getTitle(), Toast.LENGTH_SHORT).show();
+                                break;
+                        }
+                        return false;
+                    }
+                });
+                //displaying the popup
+                popup.show();
+            }
+        });
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -120,6 +153,7 @@ public class DefaultSpotAdapter extends RecyclerView.Adapter<DefaultSpotAdapter.
         public TextView createdAtFoku;
         public TextView descriptionFoku;
         public ImageView imageFoku;
+        public ImageButton ibMore;
 
         public ViewHolder(View v) {
             super(v);
@@ -127,6 +161,7 @@ public class DefaultSpotAdapter extends RecyclerView.Adapter<DefaultSpotAdapter.
             createdAtFoku = (TextView) v.findViewById(R.id.createdAtFoku);
             descriptionFoku = (TextView) v.findViewById(R.id.descriptionFoku);
             imageFoku = (ImageView) v.findViewById(R.id.imageFoku);
+            ibMore = (ImageButton) v.findViewById(R.id.ibFokuDetails);
         }
     }
 }
