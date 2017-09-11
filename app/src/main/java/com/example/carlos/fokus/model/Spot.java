@@ -22,6 +22,9 @@ public class Spot {
     private String image;
     private String deviceId;
 
+    public Spot() {
+    }
+
     public Spot(Integer id, String name, double lat, double longit,
                 int userId, String deletedAt, String createdAt,
                 String updatedAt, String description,

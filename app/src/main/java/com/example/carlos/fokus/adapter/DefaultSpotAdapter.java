@@ -1,5 +1,6 @@
 package com.example.carlos.fokus.adapter;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,9 +20,11 @@ import java.util.List;
 public class DefaultSpotAdapter extends RecyclerView.Adapter<DefaultSpotAdapter.ViewHolder> {
 
     private List<Spot> spots;
+    private Context ctx;
 
-    public DefaultSpotAdapter(List<Spot> mSpots) {
-       spots = mSpots;
+    public DefaultSpotAdapter(Context context, List<Spot> spots) {
+        this.spots = spots;
+        this.ctx = context;
     }
 
     @Override
