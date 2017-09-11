@@ -1,10 +1,15 @@
 package com.example.carlos.fokus;
 
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -13,7 +18,7 @@ import com.androidnetworking.interfaces.JSONArrayRequestListener;
 import com.example.carlos.fokus.adapter.DefaultSpotAdapter;
 import com.example.carlos.fokus.constants.Constants;
 import com.example.carlos.fokus.model.Spot;
-import com.example.carlos.fokus.services.GetListFokusService;
+import com.example.carlos.fokus.services.FokusServices;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,8 +26,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import eu.davidea.flexibleadapter.FlexibleAdapter;
 
 public class ListFokusActivity extends AppCompatActivity {
 
@@ -37,18 +40,27 @@ public class ListFokusActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_fokus);
 
-        //initializeComponents();
         getFokusList();
     }
 
-    private void initializeComponents() {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_list_fokus, menu);
+        /*MenuItem search = menu.findItem(R.id.search);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(search);
+        search(searchView); */
+        return true;
+    }
 
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    private void initializeComponents() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarListFokus);
+        setSupportActionBar(toolbar);
     }
 
     private void getFokusList() {
 
-        new GetListFokusService().call(Constants.serverUrl + "/spots", new JSONArrayRequestListener() {
+        new FokusServices().getArrayFokus(Constants.serverUrl + "/spots", new JSONArrayRequestListener() {
             @Override
             public void onResponse(JSONArray response) {
                 if (response.length() > 0) {
@@ -67,10 +79,6 @@ public class ListFokusActivity extends AppCompatActivity {
                             spot.setCreatedAt(jsonObj.getString("created_at"));
                             spot.setDescription(jsonObj.getString("description"));
                             spot.setImage(jsonObj.getString("image"));
-
-                            //Toast.makeText(ListFokusActivity.this, listFok.get(0).getName() + listFok.get(1).getName(), Toast.LENGTH_SHORT).show();
-
-                            Log.d("name", listFok.get(0).getName());
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -97,4 +105,22 @@ public class ListFokusActivity extends AppCompatActivity {
             }
         });
     }
+    /*
+    private void search(SearchView searchView) {
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+                fokusAdapter.getFilter().filter(newText);
+                return true;
+            }
+        });
+    } */
 }

@@ -11,7 +11,7 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here.-->
          <item name="colorPrimary">@color/colorPrimary</item>
-         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+         <item name="colorPrimaryDark">@color/colorPrimaryGreen</item>
          <item name="colorAccent">@color/colorAccent</item>
      </style>
 
@@ -30,6 +30,10 @@
         <!-- actionMenuTextColor is the color of the text of action (menu) items  -->
         <item name="actionMenuTextColor">@android:color/white</item>
 
+    </style>
+
+    <style name="SplashTheme" parent="AppTheme">
+        <item name="android:windowBackground">@layout/splash_screen_layout</item>
     </style>
 
 

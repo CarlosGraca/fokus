@@ -21,9 +21,14 @@
     <string name="map_type">BaseMap</string>
     <string name="map_type_terain">Terreno</string>
     <string name="map_type_satelite">Satelite</string>
+
+    <string name="imagem">Imagem</string>
+
     <string name="default_description">description</string>
     <string name="createdAtFoku">Data criada</string>
     <string name="descriptionFoku">Descricacao</string>
     <string name="nameFoku">Nome</string>
+    <string name="nameFokuTitle">Nome do local</string>
+    <string name="createdAtFokuTitle">Adicionado em</string>
 
 </resources>

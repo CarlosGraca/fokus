@@ -3,11 +3,15 @@ package com.example.carlos.fokus;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,45 +22,75 @@ import android.widget.TextView;
 
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONArrayRequestListener;
-import com.example.carlos.fokus.services.GetListFokusService;
+
+import com.androidnetworking.interfaces.JSONObjectRequestListener;
+import com.bumptech.glide.Glide;
+import com.example.carlos.fokus.helpers.ApiImage;
+import com.example.carlos.fokus.services.FokusServices;
+
 import com.example.carlos.fokus.ui.DisplayUI;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.example.carlos.fokus.constants.Constants;
 import com.example.carlos.fokus.helpers.MapFunctions;
 
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import static com.example.carlos.fokus.helpers.MapFunctions.DEFAULT_ZOOM;
+import static com.example.carlos.fokus.helpers.MapFunctions.mDefaultLocation;
+
 public class MainActivity extends AppCompatActivity
-        implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener  {
+        implements OnMapReadyCallback {
     private GoogleMap mMap;
     private String apiUrl = Constants.serverUrl+"/posts";
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    private String name;
-    private String description;
-
-    // marker to setup click listener
-    private Marker mMarker;
 
     private static final CharSequence[] MAP_TYPE_ITEMS =
             {"Mapa de rua", "Hibrido", "Satellite", "Terreno"};
 
     private DisplayUI ui ;
 
+    private static final String KEY_CAMERA_POSITION = "camera_position";
+    private static final String KEY_LOCATION = "location";
+
+    private CameraPosition mCameraPosition;
+
+    // location retrieved by the Fused Location Provider.
+    private Location mLastKnownLocation;
+
+    private FusedLocationProviderClient mFusedLocationProviderClient;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         initializeComponents();
+
+        if (savedInstanceState != null) {
+            mLastKnownLocation = savedInstanceState.getParcelable(KEY_LOCATION);
+            mCameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION);
+        }
+
+        // Construct a FusedLocationProviderClient.
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
     }
 
     public void initializeComponents () {
@@ -80,50 +114,20 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        callApi();
     }
 
-    private void callApi() {
-        new GetListFokusService().call(Constants.serverUrl+"/spots", new JSONArrayRequestListener() {
-
-            @Override
-            public void onResponse(JSONArray response) {
-                if (response.length() > 0) {
-
-                    for (int i = 0; i < response.length(); i++) {
-
-                        JSONObject jsonObj = null;
-                        try {
-                            jsonObj = response.getJSONObject(i);
-
-                            int id = jsonObj.getInt("id");
-                            name = jsonObj.getString("name");
-                            double lat = jsonObj.getDouble("lat");
-                            double longit = jsonObj.getDouble("long");
-
-                            LatLng currentLocation = new LatLng(lat, longit);
-
-                            MapFunctions.updateMarkers(
-                                    mMap,
-                                    name,
-                                    id,
-                                    currentLocation,
-                                    BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)
-                            );
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-                }
-            }
-            @Override
-            public void onError(ANError anError) {
-
-            }
-        });
-
+    /**
+     * Saves the state of the map when the activity is paused.
+     */
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        if (mMap != null) {
+            outState.putParcelable(KEY_CAMERA_POSITION, mMap.getCameraPosition());
+            outState.putParcelable(KEY_LOCATION, mLastKnownLocation);
+            super.onSaveInstanceState(outState);
+        }
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -153,24 +157,49 @@ public class MainActivity extends AppCompatActivity
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        LatLng currentLocation = new LatLng(14.9364475, -23.5067295);
+        try {
+            Task<Location> locationResult = mFusedLocationProviderClient.getLastLocation();
+            locationResult.addOnCompleteListener(this, new OnCompleteListener<Location>() {
+                @Override
+                public void onComplete(@NonNull Task<Location> task) {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        // Set the map's camera position to the current location of the device.
+                        mLastKnownLocation = task.getResult();
 
-        /*mMarker = mMap.addMarker(new MarkerOptions().
-                position(currentLocation).
-                title("Marker in Sydney")); */
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLastKnownLocation.getLatitude(),
+                                mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 13));
+                    } else {
+                        Log.d(TAG, "Current location is null. Using defaults.");
+                        Log.e(TAG, "Exception: %s", task.getException());
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
+                        mMap.getUiSettings().setMyLocationButtonEnabled(false);
+                    }
+                }
+            });
+        } catch(SecurityException e)  {
+            Log.e("Exception: %s", e.getMessage());
+        }
 
-        mMap.setOnMarkerClickListener(this);
+        setFokusMap();
+
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                showDialogFokus(marker);
+                return true;
+            }
+        });
     }
+
 
     public void showDialogFokus(Marker marker){
         final Dialog dialog = new Dialog(this);
-        dialog.setTitle("Detalhes do foku");
+        final String serverUrl = Constants.serverUrl;
 
         dialog.setContentView(R.layout.custom_info_contents);
 
-        ImageView imageView = (ImageView) dialog.findViewById(R.id.imageCamera);
+        final ImageView imageView = (ImageView) dialog.findViewById(R.id.imgFoku);
 
         // set the custom dialog components - text, image and button
         final TextView description = (TextView) dialog.findViewById(R.id.description);
@@ -180,33 +209,17 @@ public class MainActivity extends AppCompatActivity
 
         dialogButton.setVisibility(View.GONE);
         ratingBar.setEnabled(false);
+        description.setEnabled(false);
 
-        String url = Constants.serverUrl+"/spots/"+ Math.round(marker.getZIndex());
-
-        new GetListFokusService().call(url, new JSONArrayRequestListener() {
-            @Override
-            public void onResponse(JSONArray response) {
-                ui.showToast("" + response.length());
-                /*JSONObject jsonObj = null;
-                try {
-                    jsonObj = response.getJSONObject(0);
-
-                    int id = jsonObj.getInt("id");
-                    name = jsonObj.getString("name");
-
-                    ui.showToast("" + name);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }*/
-
-
-            }
-
-            @Override
-            public void onError(ANError anError) {
-                ui.showLog("" + anError.getErrorDetail());
-            }
-        });
+        // to retrieve the marker
+        JSONObject obj = (JSONObject) marker.getTag();// Type cast to your object type;
+        try {
+            description.setText(obj.getString("description"));
+            Glide.with(this).load(serverUrl+"/"+obj.getString("image")).into(imageView);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.d(TAG,e.getMessage());
+        }
 
         dialog.show();
     }
@@ -254,11 +267,39 @@ public class MainActivity extends AppCompatActivity
         fMapTypeDialog.show();
     }
 
-    public boolean onMarkerClick(Marker marker) {
 
-        showDialogFokus(marker);
 
-        return true;
+    private void setFokusMap() {
+        new FokusServices().getArrayFokus(Constants.serverUrl+"/spots", new JSONArrayRequestListener() {
+
+            @Override
+            public void onResponse(JSONArray response) {
+                if (response.length() > 0) {
+
+                    for (int i = 0; i < response.length(); i++) {
+
+                        JSONObject jsonObj;
+                        try {
+                            jsonObj = response.getJSONObject(i);
+
+                            LatLng currentLocation = new LatLng(jsonObj.getDouble("lat"), jsonObj.getDouble("long"));
+
+                            Marker mMarker = mMap.addMarker(new MarkerOptions().position(currentLocation).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
+                            // set object as tag
+                            mMarker.setTag(jsonObj);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+            @Override
+            public void onError(ANError anError) {
+                 Log.d(TAG,anError.getErrorDetail());
+            }
+        });
+
     }
 
 }

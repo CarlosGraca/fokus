@@ -4,6 +4,8 @@ package com.example.carlos.fokus;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -23,7 +25,11 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.example.carlos.fokus.constants.Constants;
+import com.example.carlos.fokus.helpers.ApiImage;
+import com.example.carlos.fokus.services.FokusServices;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.GeoDataClient;
@@ -40,9 +46,15 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import static com.example.carlos.fokus.helpers.MapFunctions.DEFAULT_ZOOM;
+import static com.example.carlos.fokus.helpers.MapFunctions.mDefaultLocation;
 
 
 public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
@@ -53,14 +65,13 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
     private Marker marker;
 
     private ImageView imageView;
+
     final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
     private GeoDataClient mGeoDataClient;
     private PlaceDetectionClient mPlaceDetectionClient;
     private FusedLocationProviderClient mFusedLocationProviderClient;
 
-    //Praia CV
-    private final LatLng mDefaultLocation = new LatLng(14.9364475, -23.5067295);
-    private static final int DEFAULT_ZOOM = 15;
+
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private boolean mLocationPermissionGranted;
 
@@ -72,6 +83,16 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
 
     private Uri file;
 
+    private File image_foku;
+
+    public static final int MEDIA_TYPE_IMAGE = 1;
+    private static final int CAMERA_REQUEST = 1888;
+    private static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE = 100;
+    private static final String IMAGE_DIRECTORY_NAME = "Fokus";
+
+    private Uri fileUri;
+    static File mediaFile;
+
 
     String deviceID;
     String mDescription;
@@ -79,6 +100,8 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
     String mTitle;
     String mLat;
     String mLong;
+
+
 
 
     @Override
@@ -118,6 +141,7 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[] { android.Manifest.permission.CAMERA, android.Manifest.permission.WRITE_EXTERNAL_STORAGE }, 0);
         }
+
     }
 
     /**
@@ -169,28 +193,25 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
 
         marker = mMarker;
 
-        final String url =  Constants.serverUrl+"/posts";
-
-
         final Dialog dialog = new Dialog(this);
 
         dialog.setContentView(R.layout.custom_info_contents);
 
-        imageView = (ImageView) dialog.findViewById(R.id.imageCamera);
+        imageView = (ImageView) dialog.findViewById(R.id.imgFoku);
+
+        image_foku = null;
 
         // set the custom dialog components - text, image and button
         final TextView description = (TextView) dialog.findViewById(R.id.description);
 
         Button dialogButton = (Button) dialog.findViewById(R.id.btSend);
-        RatingBar ratingBar = (RatingBar) dialog.findViewById(R.id.ratingBar);
+
+        final RatingBar ratingBar = (RatingBar) dialog.findViewById(R.id.ratingBar);
+
         ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             public void onRatingChanged(RatingBar ratingBar, float rating,
                                         boolean fromUser) {
                 mRating = String.valueOf(rating);
-                Toast.makeText(NewFoku.this,
-                        String.valueOf(rating),
-                        Toast.LENGTH_SHORT).show();
-
             }
         });
 
@@ -201,16 +222,30 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
             }
         });
 
+
         // if button is clicked, close the custom dialog
         dialogButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mDescription = String.valueOf(description.getText());
-                saveFokus(marker);
+                if (checkFieldsRequired(description, ratingBar)){
+                    if (saveFokus(marker)){
+                        Toast.makeText(NewFoku.this, "Sua Denuncia foi enviado!", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                    }
+                }
             }
         });
 
         dialog.show();
+    }
+
+    public boolean checkFieldsRequired(TextView textView,RatingBar ratingBar){
+        if (textView.getText().toString().trim().equals("")) {
+            textView.setError("Required!");
+            return false;
+        }
+        return true;
     }
 
     private void getDeviceLocation() {
@@ -225,8 +260,8 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
                     @Override
                     public void onComplete(@NonNull Task<Location> task) {
                         if  (task.isSuccessful() && task.getResult() != null) {
-                            // Set the map's camera position to the current location of the device.
-                            mLastKnownLocation = task.getResult();
+                                // Set the map's camera position to the current location of the device.
+                                mLastKnownLocation = task.getResult();
 
                                 marker = mMap.addMarker(new MarkerOptions().position(new LatLng(mLastKnownLocation.getLatitude(),
                                     mLastKnownLocation.getLongitude()))
@@ -327,27 +362,32 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
 
     public void costumerMarker(LatLng latLng, String title, String snippet){
         marker = mMap.addMarker(new MarkerOptions().position(latLng)
-                //.title(title)
-               // .snippet(snippet)
                 .draggable(true));
     }
 
     public void takePicture() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        file = Uri.fromFile(getOutputMediaFile());
+
+        image_foku = getOutputMediaFile();
+        file = Uri.fromFile(image_foku);
+
         intent.putExtra(MediaStore.EXTRA_OUTPUT, file);
 
         startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
-            //if (resultCode == RESULT_OK) {
-                imageView.setImageURI(file);
-           // }
+
+            image_foku = ApiImage.compressImage(image_foku);
+
+            imageView.setImageURI(file);
+
         }
+
     }
 
     private static File getOutputMediaFile(){
@@ -365,41 +405,37 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
                 "IMG_"+ timeStamp + ".jpg");
     }
 
-    public void saveFokus(final Marker marker){
+    public boolean saveFokus(final Marker marker){
+        final boolean mSuccess;
         final String url =  Constants.serverUrl + "/spots";
 
         mLong = String.valueOf(marker.getPosition().longitude);
         mLat = String.valueOf(marker.getPosition().latitude);
+        Log.d("url",Constants.serverUrl + "/spots");
 
-        /*new SaveFokusDetailsService().call(url, mLong, mLat, deviceID, mDescription, new StringRequestListener() {
+        new FokusServices().saveFoku(url, mLong, mLat, deviceID, mDescription,image_foku, mRating, new JSONObjectRequestListener() {
             @Override
-            public void onResponse(String response) {
-                Log.d("response", response);
+            public void onResponse(JSONObject response) {
+                try {
+                    Log.d(TAG, response.getString("name"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
             public void onError(ANError anError) {
                 Log.d("URl",url);
-                Log.d("URl",mLong);
-                Log.d("URl",mLat);
-
                 if (anError.getErrorCode() != 0) {
-                    // received error from server
-                    // error.getErrorCode() - the error code from server
-                    // error.getErrorBody() - the error body from server
-                    // error.getErrorDetail() - just an error detail
                     Log.d(TAG, "onError errorCode : " + anError.getErrorCode());
                     Log.d(TAG, "onError errorBody : " + anError.getErrorBody());
                     Log.d(TAG, "onError errorDetail : " + anError.getErrorDetail());
-                    // get parsed error object (If ApiError is your class)
-                    //ApiError apiError = anError.getErrorAsObject(ApiError.class);
                 } else {
-                    // error.getErrorDetail() : connectionError, parseError, requestCancelledError
                     Log.d(TAG, "onError errorDetail : " + anError.getErrorDetail());
                 }
             }
-        });*/
-
+        });
+        return true;
     }
 }
 

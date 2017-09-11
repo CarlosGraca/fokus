@@ -17,15 +17,15 @@ public class AppInstallReceiver extends BroadcastReceiver {
         PackageManager manager = context.getPackageManager();
         if (intent.getAction().equals(Intent.ACTION_PACKAGE_ADDED)) {
             String packageName = intent.getData().getSchemeSpecificPart();
-            Toast.makeText(context, "Successfully installed"+packageName, Toast.LENGTH_LONG).show();
+            //Toast.makeText(context, "Successfully installed"+packageName, Toast.LENGTH_LONG).show();
         }
         if (intent.getAction().equals(Intent.ACTION_PACKAGE_REMOVED)) {
             String packageName = intent.getData().getSchemeSpecificPart();
-            Toast.makeText(context, "Uninstall success"+packageName, Toast.LENGTH_LONG).show();
+            //Toast.makeText(context, "Uninstall success"+packageName, Toast.LENGTH_LONG).show();
         }
         if (intent.getAction().equals(Intent.ACTION_PACKAGE_REPLACED)) {
             String packageName = intent.getData().getSchemeSpecificPart();
-            Toast.makeText(context, "The replacement success"+packageName, Toast.LENGTH_LONG).show();
+            //Toast.makeText(context, "The replacement success"+packageName, Toast.LENGTH_LONG).show();
         }
     }
 }

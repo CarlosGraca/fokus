@@ -4,17 +4,16 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardBackgroundColor="@color/cardview_light_background"
-    app:cardCornerRadius="@dimen/cardview_default_radius"
-    app:cardElevation="@dimen/cardview_default_elevation"
-    app:cardUseCompatPadding="true"
-    app:cardMaxElevation="@dimen/cardview_default_elevation"
-    app:cardPreventCornerOverlap="true"
-    android:background="#000">
+    android:layout_marginTop="5dp"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    app:cardCornerRadius="5dp">
 
     <RelativeLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_margin="10dp">
 
         <ImageView
             android:id="@+id/imageFoku"
@@ -27,40 +26,68 @@
             android:layout_centerHorizontal="true"/>
 
         <TextView
-            android:id="@+id/nameFoku"
-            android:layout_width="wrap_content"
+            android:id="@+id/nameFokuTitle"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/nameFoku"
+            android:text="@string/nameFokuTitle"
+            android:layout_below="@+id/imageFoku"
+            android:textColor="#000"
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
-            android:layout_below="@+id/imageFoku"
-            android:textColor="#000"/>
+            android:paddingEnd="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingStart="@dimen/activity_horizontal_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin" />
+
+        <TextView
+            android:id="@+id/nameFoku"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/nameFoku"
+            android:layout_below="@+id/nameFokuTitle"
+            android:textColor="#808184"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:padding="@dimen/activity_horizontal_margin" />
+
+        <TextView
+            android:id="@+id/createdAtFokuTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/createdAtFokuTitle"
+            android:layout_below="@+id/nameFoku"
+            android:textColor="#000"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:paddingEnd="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingStart="@dimen/activity_horizontal_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"/>
 
         <TextView
             android:id="@+id/createdAtFoku"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/createdAtFoku"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_below="@id/nameFoku"
-            android:textColor="#000"/>
+            android:textColor="#808184"
+            android:layout_below="@id/createdAtFokuTitle"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:padding="@dimen/activity_horizontal_margin"/>
 
         <TextView
             android:id="@+id/descriptionFoku"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/descriptionFoku"
+            android:textColor="#000"
+            android:layout_below="@id/createdAtFoku"
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
-            android:layout_below="@id/nameFoku"
-            android:textColor="#000"/>
+            android:padding="@dimen/activity_horizontal_margin"/>
 
     </RelativeLayout>
 

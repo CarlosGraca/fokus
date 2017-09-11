@@ -5,9 +5,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.carlos.fokus.R;
+import com.example.carlos.fokus.constants.Constants;
 import com.example.carlos.fokus.model.Spot;
 
 import java.util.ArrayList;
@@ -20,10 +26,12 @@ import java.util.List;
 public class DefaultSpotAdapter extends RecyclerView.Adapter<DefaultSpotAdapter.ViewHolder> {
 
     private List<Spot> spots;
+    //private List<Spot> mArrayList;
     private Context ctx;
 
-    public DefaultSpotAdapter(Context context, List<Spot> spots) {
-        this.spots = spots;
+    public DefaultSpotAdapter(Context context, List<Spot> arrayList) {
+        //this.mArrayList = arrayList;
+        this.spots = arrayList;
         this.ctx = context;
     }
 
@@ -50,7 +58,14 @@ public class DefaultSpotAdapter extends RecyclerView.Adapter<DefaultSpotAdapter.
         holder.descriptionFoku.setText(spot.getDescription());
 
         // use glide library to load image for foku
-
+        ImageView imageFoku = holder.imageFoku;
+        Glide.with(ctx)
+                .load(Constants.serverUrl + "/" + spot.getImage())
+                .asBitmap()
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .override(600, 200)
+                .centerCrop()
+                .into(imageFoku);
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -58,6 +73,45 @@ public class DefaultSpotAdapter extends RecyclerView.Adapter<DefaultSpotAdapter.
     public int getItemCount() {
         return spots.size();
     }
+
+    /*@Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+
+                String charString = charSequence.toString();
+
+                if (charString.isEmpty()) {
+
+                    spots = mArrayList;
+                } else {
+
+                    List<Spot> filteredList = new ArrayList<>();
+
+                    for (Spot spot : mArrayList) {
+
+                        if (spot.getName().toLowerCase().contains(charSequence)) {
+
+                            filteredList.add(spot);
+                        }
+                    }
+
+                    spots = filteredList;
+                }
+
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = spots;
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults results) {
+                spots = (List<Spot>) results.values;
+                notifyDataSetChanged();
+            }
+        };
+    } */
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
