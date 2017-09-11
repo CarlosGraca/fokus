@@ -267,8 +267,6 @@ public class MainActivity extends AppCompatActivity
         fMapTypeDialog.show();
     }
 
-
-
     private void setFokusMap() {
         new FokusServices().getArrayFokus(Constants.serverUrl+"/spots", new JSONArrayRequestListener() {
 
