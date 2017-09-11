@@ -1,5 +1,7 @@
 package com.example.carlos.fokus;
 
+import android.provider.ContactsContract;
+import android.provider.Settings;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,6 +13,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.androidnetworking.error.ANError;
@@ -27,13 +31,16 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListFokusActivity extends AppCompatActivity {
+public class ListFokusActivity extends AppCompatActivity
+    implements CompoundButton.OnCheckedChangeListener{
 
     private RecyclerView fokusRecycler;
     private DefaultSpotAdapter fokusAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
     private List<Spot> listFok = new ArrayList<>();
+
+    private Switch switchMyFokusOnly;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,27 +49,32 @@ public class ListFokusActivity extends AppCompatActivity {
 
         initializeComponents();
 
-        getFokusList();
+        getFokusList(Constants.serverUrl + "/spots");
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_list_fokus, menu);
-        /*MenuItem search = menu.findItem(R.id.search);
+        MenuItem search = menu.findItem(R.id.search);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(search);
-        search(searchView); */
-        return true;
+        search(searchView);
+
+        return super.onCreateOptionsMenu(menu);
     }
 
     private void initializeComponents() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarListFokus);
         setSupportActionBar(toolbar);
+
+        switchMyFokusOnly = (Switch) findViewById(R.id.switch_top);
+        switchMyFokusOnly.setOnCheckedChangeListener(this);
+
     }
 
-    private void getFokusList() {
+    private void getFokusList(String url) {
 
-        new FokusServices().getArrayFokus(Constants.serverUrl + "/spots", new JSONArrayRequestListener() {
+        new FokusServices().getArrayFokus(url, new JSONArrayRequestListener() {
             @Override
             public void onResponse(JSONArray response) {
                 if (response.length() > 0) {
@@ -107,12 +119,16 @@ public class ListFokusActivity extends AppCompatActivity {
             }
         });
     }
-    /*
     private void search(SearchView searchView) {
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+
+                if (query == null || query.length() < 0) {
+
+                    Toast.makeText(ListFokusActivity.this, "Nenhum foku", Toast.LENGTH_SHORT).show();
+                }
 
                 return false;
             }
@@ -124,5 +140,19 @@ public class ListFokusActivity extends AppCompatActivity {
                 return true;
             }
         });
-    } */
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if (isChecked) {
+
+            String deviceID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+
+            getFokusList(Constants.serverUrl + "/spots?device_id=" + deviceID);
+
+        } else {
+
+            getFokusList(Constants.serverUrl + "/spots");
+        }
+    }
 }

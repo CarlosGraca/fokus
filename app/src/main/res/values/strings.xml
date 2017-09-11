@@ -30,5 +30,6 @@
     <string name="nameFoku">Nome</string>
     <string name="nameFokuTitle">Nome do local</string>
     <string name="createdAtFokuTitle">Adicionado em</string>
+    <string name="mySpotsOnly">Apenas meus pontos</string>
 
 </resources>

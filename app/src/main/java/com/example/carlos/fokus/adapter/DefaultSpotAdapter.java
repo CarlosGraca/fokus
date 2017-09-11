@@ -23,14 +23,15 @@ import java.util.List;
  * Created by eceybrito on 10/09/2017.
  */
 
-public class DefaultSpotAdapter extends RecyclerView.Adapter<DefaultSpotAdapter.ViewHolder> {
+public class DefaultSpotAdapter extends RecyclerView.Adapter<DefaultSpotAdapter.ViewHolder>
+    implements Filterable{
 
     private List<Spot> spots;
-    //private List<Spot> mArrayList;
+    private List<Spot> mArrayList;
     private Context ctx;
 
     public DefaultSpotAdapter(Context context, List<Spot> arrayList) {
-        //this.mArrayList = arrayList;
+        this.mArrayList = arrayList;
         this.spots = arrayList;
         this.ctx = context;
     }
@@ -74,7 +75,7 @@ public class DefaultSpotAdapter extends RecyclerView.Adapter<DefaultSpotAdapter.
         return spots.size();
     }
 
-    /*@Override
+    @Override
     public Filter getFilter() {
         return new Filter() {
             @Override
@@ -111,7 +112,7 @@ public class DefaultSpotAdapter extends RecyclerView.Adapter<DefaultSpotAdapter.
                 notifyDataSetChanged();
             }
         };
-    } */
+    }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
