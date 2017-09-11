@@ -93,7 +93,7 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
     String deviceID;
     String mDescription;
     String mRating;
-    String mTitle;
+    String mName;
     String mLat;
     String mLong;
 
@@ -164,7 +164,7 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
                 if (marker != null){
                     marker.remove();
                 }
-                costumerMarker(new LatLng(latLng.latitude,latLng.longitude),"New Fokus","New Fokus");
+                costumerMarker(new LatLng(latLng.latitude,latLng.longitude));
             }
         });
 
@@ -213,8 +213,7 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
         });
 
         // to retrieve the marker
-        String obj = (String) marker.getTag();// Type cast to your object type;
-        Toast.makeText(this.getApplicationContext(),obj,Toast.LENGTH_SHORT).show();
+        mName = (String) marker.getTag();// Type cast to your object type;
 
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -264,9 +263,11 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
                                 // Set the map's camera position to the current location of the device.
                                 mLastKnownLocation = task.getResult();
 
-                                marker = mMap.addMarker(new MarkerOptions().position(new LatLng(mLastKnownLocation.getLatitude(),
+                                /*marker = mMap.addMarker(new MarkerOptions().position(new LatLng(mLastKnownLocation.getLatitude(),
                                     mLastKnownLocation.getLongitude()))
-                                                               .draggable(true));
+                                                               .draggable(true));*/
+                                 costumerMarker(new LatLng(mLastKnownLocation.getLatitude(),
+                                         mLastKnownLocation.getLongitude()));
 
                                  mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLastKnownLocation.getLatitude(),
                                     mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
@@ -274,7 +275,8 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
                         } else {
                             Log.d(TAG, "Current location is null. Using defaults.");
                             Log.e(TAG, "Exception: %s", task.getException());
-                            marker = mMap.addMarker(new MarkerOptions().position(mDefaultLocation));
+                           // marker = mMap.addMarker(new MarkerOptions().position(mDefaultLocation));
+                            costumerMarker(mDefaultLocation);
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
                             mMap.getUiSettings().setMyLocationButtonEnabled(false);
                         }
@@ -361,7 +363,7 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
         }
     }
 
-    public void costumerMarker(LatLng latLng, String title, String snippet){
+    public void costumerMarker(LatLng latLng){
         marker = mMap.addMarker(new MarkerOptions().position(latLng)
                 .draggable(true));
 
@@ -417,7 +419,7 @@ public class NewFoku extends AppCompatActivity implements OnMapReadyCallback {
         mLat = String.valueOf(marker.getPosition().latitude);
         Log.d("url",Constants.serverUrl + "/spots");
 
-        new FokusServices().saveFoku(url, mLong, mLat, deviceID, mDescription,image_foku, mRating, new JSONObjectRequestListener() {
+        new FokusServices().saveFoku(url,mName, mLong, mLat, deviceID, mDescription,image_foku, mRating, new JSONObjectRequestListener() {
             @Override
             public void onResponse(JSONObject response) {
                 try {

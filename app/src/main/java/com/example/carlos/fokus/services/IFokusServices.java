@@ -11,6 +11,6 @@ import java.io.File;
 
 public interface IFokusServices {
     void getFoku (String url, JSONObjectRequestListener listener);
-    void saveFoku(String url, String mLong, String mLat, String  deviceID, String mDescription, File image_foku,String rating, JSONObjectRequestListener listener);
+    void saveFoku(String url, String nName,String mLong, String mLat, String  deviceID, String mDescription, File image_foku,String rating, JSONObjectRequestListener listener);
     void getArrayFokus(String url, JSONArrayRequestListener listener);
 }
