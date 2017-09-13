@@ -66,6 +66,17 @@ public class ListFokusActivity extends AppCompatActivity
         return super.onCreateOptionsMenu(menu);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == android.R.id.home ) {
+            onBackPressed();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     private void initializeComponents() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarListFokus);
         setSupportActionBar(toolbar);
