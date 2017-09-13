@@ -1,9 +1,13 @@
 package com.example.carlos.fokus.adapter;
 
 import android.content.Context;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +18,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.carlos.fokus.R;
 import com.example.carlos.fokus.constants.Constants;
+import com.example.carlos.fokus.fragments.DialogMapFragment;
 import com.example.carlos.fokus.model.Spot;
+import com.example.carlos.fokus.services.FokusServices;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,16 +40,18 @@ import java.util.List;
  */
 
 public class DefaultSpotAdapter extends RecyclerView.Adapter<DefaultSpotAdapter.ViewHolder>
-    implements Filterable{
+    implements Filterable {
 
     private List<Spot> spots;
     private List<Spot> mArrayList;
     private Context ctx;
+    private AppCompatActivity activity;
 
-    public DefaultSpotAdapter(Context context, List<Spot> arrayList) {
+    public DefaultSpotAdapter(Context context, List<Spot> arrayList, AppCompatActivity activity) {
         this.mArrayList = arrayList;
         this.spots = arrayList;
         this.ctx = context;
+        this.activity = activity;
     }
 
     @Override
@@ -77,26 +91,12 @@ public class DefaultSpotAdapter extends RecyclerView.Adapter<DefaultSpotAdapter.
             @Override
             public void onClick(View view) {
 
-                //creating a popup menu
-                PopupMenu popup = new PopupMenu(ctx, holder.ibMore);
-                //inflating menu from xml resource
-                popup.inflate(R.menu.popup_menu_card);
-                //adding click listener
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.one:
-                                Toast.makeText(ctx, item.getTitle(), Toast.LENGTH_SHORT).show();
-                                break;
-                            case R.id.two:
-                                Toast.makeText(ctx, item.getTitle(), Toast.LENGTH_SHORT).show();
-                                break;
-                        }
-                        return false;
-                    }
-                });
-                //displaying the popup
+                //PopupMenu popup = new PopupMenu(ctx, view);
+                Context wrapper = new ContextThemeWrapper(ctx, R.style.MyPopupMenu);
+                PopupMenu popup = new PopupMenu(wrapper, view);
+                MenuInflater inflate = popup.getMenuInflater();
+                inflate.inflate(R.menu.popup_menu_card, popup.getMenu());
+                popup.setOnMenuItemClickListener(new MyPopupMenu(activity));
                 popup.show();
             }
         });
@@ -163,5 +163,35 @@ public class DefaultSpotAdapter extends RecyclerView.Adapter<DefaultSpotAdapter.
             imageFoku = (ImageView) v.findViewById(R.id.imageFoku);
             ibMore = (ImageButton) v.findViewById(R.id.ibFokuDetails);
         }
+    }
+}
+
+class MyPopupMenu implements android.support.v7.widget.PopupMenu.OnMenuItemClickListener {
+
+    private AppCompatActivity activity;
+
+    public MyPopupMenu(AppCompatActivity activity) {
+        this.activity = activity;
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+
+        switch (item.getItemId()) {
+
+            case R.id.map_look:
+
+                /*FragmentTransaction ft = activity.getSupportFragmentManager().beginTransaction();
+                DialogMapFragment df = new DialogMapFragment();
+                ft.addToBackStack(null);
+                df.show(ft, "Tag");*/
+
+                break;
+
+            default:
+                break;
+        }
+
+        return false;
     }
 }

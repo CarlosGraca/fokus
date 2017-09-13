@@ -152,7 +152,8 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
         }
         if (id == R.id.action_about) {
-            return true;
+            Intent intent = new Intent(MainActivity.this, AboutActivity.class);
+            startActivity(intent);
         }
         if (id == R.id.action_my_map_type) {
             showMapTypeSelectorDialog();

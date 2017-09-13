@@ -23,6 +23,7 @@ import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONArrayRequestListener;
 import com.example.carlos.fokus.adapter.DefaultSpotAdapter;
 import com.example.carlos.fokus.constants.Constants;
+import com.example.carlos.fokus.fragments.DialogMapFragment;
 import com.example.carlos.fokus.model.Spot;
 import com.example.carlos.fokus.services.FokusServices;
 
@@ -96,6 +97,8 @@ public class ListFokusActivity extends AppCompatActivity
                             spot.setCreatedAt(jsonObj.getString("created_at"));
                             spot.setDescription(jsonObj.getString("description"));
                             spot.setImage(jsonObj.getString("image"));
+                            spot.setId(jsonObj.getInt("id"));
+                            //spot.setUserId(jsonObj.getInt("user_id"));
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -107,7 +110,7 @@ public class ListFokusActivity extends AppCompatActivity
                     // specify an adapter (see also next example)
                     fokusRecycler = (RecyclerView) findViewById(R.id.fokus_recycler);
                     fokusRecycler.setHasFixedSize(true);
-                    fokusAdapter = new DefaultSpotAdapter(getApplicationContext(),listFok);
+                    fokusAdapter = new DefaultSpotAdapter(getApplicationContext(),listFok, ListFokusActivity.this);
                     fokusRecycler.setAdapter(fokusAdapter);
                     mLayoutManager = new LinearLayoutManager(ListFokusActivity.this);
                     fokusRecycler.setLayoutManager(mLayoutManager);

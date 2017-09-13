@@ -2,7 +2,6 @@ package com.example.carlos.fokus.model;
 
 import android.view.View;
 
-import eu.davidea.flexibleadapter.FlexibleAdapter;
 
 /**
  * Created by eceybrito on 09/09/2017.
