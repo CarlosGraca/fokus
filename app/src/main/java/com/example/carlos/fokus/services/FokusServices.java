@@ -1,6 +1,7 @@
 package com.example.carlos.fokus.services;
 
 import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.common.ANRequest;
 import com.androidnetworking.common.Priority;
 import com.androidnetworking.interfaces.JSONArrayRequestListener;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
@@ -49,5 +50,14 @@ public class FokusServices implements IFokusServices {
                 .setPriority(Priority.HIGH)
                 .build()
                 .getAsJSONArray(listener);
+    }
+
+    @Override
+    public ANRequest getArrayFokus2(String url) {
+        ANRequest request = AndroidNetworking.get(url)
+                .setPriority(Priority.HIGH)
+                .build();
+        return request;
+
     }
 }

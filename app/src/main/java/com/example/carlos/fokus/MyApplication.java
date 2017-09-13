@@ -4,7 +4,6 @@ import android.app.Application;
 
 import com.androidnetworking.AndroidNetworking;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
-import com.jacksonandroidnetworking.JacksonParserFactory;
 
 import okhttp3.OkHttpClient;
 
