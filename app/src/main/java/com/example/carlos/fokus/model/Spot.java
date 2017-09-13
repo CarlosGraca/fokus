@@ -1,5 +1,11 @@
 package com.example.carlos.fokus.model;
 
+<<<<<<< HEAD
+=======
+import android.view.View;
+
+
+>>>>>>> 71cf4b9d9372cd9ab89f0b7a00822a09df81c241
 /**
  * Created by eceybrito on 09/09/2017.
  */

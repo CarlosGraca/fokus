@@ -31,5 +31,16 @@
     <string name="nameFokuTitle">Nome do local</string>
     <string name="createdAtFokuTitle">Adicionado em</string>
     <string name="mySpotsOnly">Apenas meus pontos</string>
+    <string name="map_look">Ver no mapa</string>
+    <string name="fokuDetails">Detalhes</string>
+
+    <string name="text_about">
+        Se você chegou aqui, significa que está interessado em ajudar a sua comunidade a combater na eliminação dos mosquitos, transmissor dos vírus da Dengue, Zika, Paludismo, etc.
+        Este aplicativo foi desenhado para pessoas como VOCÊ.
+
+    </string>
+    <string name="text_sobre">Sobre</string>
+    <string name="text_pankman">PrankM</string>
+    <string name="text_sua_parte">FACA SUA PARTE!!!</string>
 
 </resources>

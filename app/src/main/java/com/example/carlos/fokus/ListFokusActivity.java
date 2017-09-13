@@ -6,6 +6,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -14,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.Toast;
 
@@ -21,6 +23,7 @@ import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONArrayRequestListener;
 import com.example.carlos.fokus.adapter.DefaultSpotAdapter;
 import com.example.carlos.fokus.constants.Constants;
+import com.example.carlos.fokus.fragments.DialogMapFragment;
 import com.example.carlos.fokus.model.Spot;
 import com.example.carlos.fokus.services.FokusServices;
 
@@ -32,7 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ListFokusActivity extends AppCompatActivity
-    implements CompoundButton.OnCheckedChangeListener{
+    implements CompoundButton.OnCheckedChangeListener {
 
     private RecyclerView fokusRecycler;
     private DefaultSpotAdapter fokusAdapter;
@@ -70,6 +73,7 @@ public class ListFokusActivity extends AppCompatActivity
         switchMyFokusOnly = (Switch) findViewById(R.id.switch_top);
         switchMyFokusOnly.setOnCheckedChangeListener(this);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void getFokusList(String url) {
@@ -93,6 +97,8 @@ public class ListFokusActivity extends AppCompatActivity
                             spot.setCreatedAt(jsonObj.getString("created_at"));
                             spot.setDescription(jsonObj.getString("description"));
                             spot.setImage(jsonObj.getString("image"));
+                            spot.setId(jsonObj.getInt("id"));
+                            //spot.setUserId(jsonObj.getInt("user_id"));
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -104,7 +110,7 @@ public class ListFokusActivity extends AppCompatActivity
                     // specify an adapter (see also next example)
                     fokusRecycler = (RecyclerView) findViewById(R.id.fokus_recycler);
                     fokusRecycler.setHasFixedSize(true);
-                    fokusAdapter = new DefaultSpotAdapter(getApplicationContext(),listFok);
+                    fokusAdapter = new DefaultSpotAdapter(getApplicationContext(),listFok, ListFokusActivity.this);
                     fokusRecycler.setAdapter(fokusAdapter);
                     mLayoutManager = new LinearLayoutManager(ListFokusActivity.this);
                     fokusRecycler.setLayoutManager(mLayoutManager);

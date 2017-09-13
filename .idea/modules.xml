@@ -2,9 +2,12 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Fokus.iml" filepath="$PROJECT_DIR$/Fokus.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+<<<<<<< HEAD
       <module fileurl="file://$PROJECT_DIR$/pop/pop.iml" filepath="$PROJECT_DIR$/pop/pop.iml" />
+=======
+      <module fileurl="file://$PROJECT_DIR$/fokus.iml" filepath="$PROJECT_DIR$/fokus.iml" />
+>>>>>>> 71cf4b9d9372cd9ab89f0b7a00822a09df81c241
     </modules>
   </component>
 </project>

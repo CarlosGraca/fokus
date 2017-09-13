@@ -127,9 +127,24 @@ public class MainActivity extends BaseMapActivity implements ClusterManager.OnCl
     }
 
 
+<<<<<<< HEAD
     @Override
     public void onClusterInfoWindowClick(Cluster<MyItem> cluster) {
         // Does nothing, but you could go to a list of the users.
+=======
+        if (id == R.id.action_my_points) {
+            Intent intent = new Intent(MainActivity.this, ListFokusActivity.class);
+            startActivity(intent);
+        }
+        if (id == R.id.action_about) {
+            Intent intent = new Intent(MainActivity.this, AboutActivity.class);
+            startActivity(intent);
+        }
+        if (id == R.id.action_my_map_type) {
+            showMapTypeSelectorDialog();
+        }
+        return super.onOptionsItemSelected(item);
+>>>>>>> 71cf4b9d9372cd9ab89f0b7a00822a09df81c241
     }
 
     @Override

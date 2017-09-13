@@ -36,5 +36,9 @@
         <item name="android:windowBackground">@layout/splash_screen_layout</item>
     </style>
 
+    <style name="MyPopupMenu" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:popupBackground">#0F213F</item>
+        <item name="android:disabledAlpha">0.5</item>
+    </style>
 
 </resources>
